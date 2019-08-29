@@ -1,0 +1,135 @@
+@charset "UTF-8";
+
+.backDiv{
+	bottom: 165px;
+    position: fixed;
+    z-index: 1000000000;
+    right: 120px;
+}
+
+.chat{
+    content: '';
+    position: absolute;
+    border-top: 25px solid black;
+    border-right: 0px solid transparent;
+    border-left: 30px solid transparent;
+    bottom: -23px;
+	right: 23px;
+}	
+
+#chatbotBtn {
+	cursor: pointer;
+	border-radius: 50%;
+	position: fixed;
+	bottom: 100px;
+	width: 50px;
+	height: 50px;
+	z-index: 10000;
+	right: 100px
+}
+
+#chatModal{
+	display: none;
+	border-radius: 30px;
+	width: 380px
+}
+
+.mainDiv{
+	width: 450px;
+	background: gray;
+}
+
+.topDiv{
+	width: 100%;
+	height: 60px;
+	font-size: 1.5em;
+	text-align: center;
+	background: black;
+	padding-top: 4%;
+	border-radius: 100px;
+}
+
+.topDiv h4{
+	color : white;
+}
+
+.contentDiv{
+	width: 100%;
+	height: 450px;
+	overflow: auto;
+	padding: 5px;
+}
+
+.bottomDiv{
+	padding : 2%;
+	padding-top : 3%;
+	height: 60px;
+	width: 100%;
+	background: black;
+	display: inline-block;
+	border-radius: 100px;
+}
+
+#inputText{
+	width : 280px;
+	display: inline-block;
+	border-radius: 15px;
+    margin-top: 4px;
+    margin-left: 9px;
+	padding-left: 15px;
+}
+
+#submitBtn{
+	float: right;
+	border-radius: 30px; 
+	margin-right: 8px;
+}
+
+#chatbotForm{
+	width: 100%
+}
+
+.Mydiv{
+	width: 280px;
+    height: auto;
+    background: white;
+    float: right;
+    margin-bottom: 10px;
+    border-radius: 20px;
+    padding: 3%;
+}
+
+.Chatdiv{
+	width: 280px;
+    height: auto;
+    background: white;
+    float: left;
+    margin-bottom: 10px;
+    border-radius: 20px;
+    padding: 3%;
+}
+
+.MY{
+	display: inline-block;
+	float: right;
+}
+
+.CHAT{
+	display: inline-block;
+}
+
+.MyImg{
+	margin-left:10px;
+	width: 45px;
+	height: 45px;
+	float: right;
+	border-radius: 50%;
+}
+
+.ChatImg{
+	margin-right:10px;
+	width: 45px;
+	height: 45px;
+	float: left;
+	border-radius: 50%;
+}

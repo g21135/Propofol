@@ -1,0 +1,161 @@
+@charset "UTF-8";
+
+/* 뉴스검색폼 css */
+.d1 {
+	width: 50%;
+	padding: 30px 0;
+	margin: 1px auto auto 26%;
+}
+
+ .head{
+	width: 50%;
+	padding: 30px 0;
+	margin: 130px auto auto 26%;
+    font-size : 40px;
+    font-weight: bold;
+    text-align:center;
+    color: #369;
+}
+
+form {
+	position: relative;
+	width: 500px;
+	margin: 0 auto;
+}
+
+.d1 {
+	background: #F6F6F6;
+}
+
+.d1 input {
+	width: 100%;
+	height: 42px;
+	padding-left: 10px;
+	border: 2px solid #666666;
+	border-radius: 5px;
+	outline: none;
+	color: #9E9C9C;
+}
+
+.d1 button {
+	position: absolute;
+	top: 0;
+	right: 0px;
+	width: 42px;
+	height: 42px;
+	border: none;
+	background: #666666;
+	border-radius: 0 5px 5px 0;
+	cursor: pointer;
+}
+
+.d1 button:before {
+	content: "\f002";
+	font-family: FontAwesome;
+	font-size: 16px;
+	color: #F9F0DA;
+}
+
+/* 채용뉴스 기업뉴스 css */
+#nav {
+	width: 50%;
+	padding: 20px 0;
+	margin: auto auto auto 25%;
+}
+
+#nav ul {
+	text-align: center;
+	font-size: 11px;
+	width: 100%;
+	display: inline-block;
+	list-style: none;
+}
+
+#nav li {
+	width: 300px; display : inline-block;
+	padding: 10px 15px;
+	text-decoration: none;
+	font-weight: bold;
+	color: red;
+	border: 1px solid red;
+	display: inline-block;
+}
+
+#selectable .ui-selected {
+	background: #F45757;
+	color: white;
+}
+
+#day {
+	width: 60%;
+	margin: auto auto auto 20%;
+	
+}
+
+#day ul {
+	text-align: center;
+	font-size: 11px;
+	width: 100%;
+	display: inline-block;
+	list-style: none;
+}
+
+#day li {
+	width: 130px; 
+	display : inline-block;
+	font-size : 1.2em;
+	padding: 10px 15px;
+	text-decoration: none;
+	color: black;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	cursor: pointer;
+}
+
+#day li:hover {
+	color: red;
+}
+#day li:visited{
+    color: white;
+ }
+
+/* 뉴스리스트 css */
+
+#news div {
+  	width: 50%;
+	margin: auto auto auto 30%;
+}
+
+#news div ul {
+  list-style-type: none;
+  width: 500px;
+}
+
+#news div h3 {
+  font: bold 20px/1.5 Helvetica, Verdana, sans-serif;
+}
+
+#news div li img {
+  width:300px;
+  heigh:300px;
+   marginRight:10px;
+    marginLeft:10px;
+}
+
+#news div li p {
+  font: 200 12px/1.5 Georgia, Times New Roman, serif;
+}
+
+#news div li {
+  padding: 10px;
+  overflow: auto;
+}
+
+#Methods2{ width:900px; }
+#Methods2 dl{width:860px; height:200px; }
+#Methods2 dt{width:180px; height:180px; float:left; margin:10px; }
+#Methods2 dt img{width:180px; height:180px;}
+#Methods2 dd{width:610px; height:160px; float:left;  padding:10px 20px; line-height:20px;  text-align:left;}
+#Methods2 dd p1{margin-bottom: 5px; font-weight:bold;}
+#Methods2 dd p2{margin-bottom: 5px; padding: inherit;}
+#Methods2 dd p{margin-bottom: 5px;}

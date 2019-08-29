@@ -1,0 +1,99 @@
+@charset "UTF-8";
+
+#top {
+	width: 100%;
+	height: 50px;
+	background: #1a1a1a;
+}
+
+#top a {
+	display: inline-block;
+	text-decoration: none;
+	color: gray;
+	font-weight: bold;
+	font-size: 20px;
+	border-radius: 2px;
+	padding: 6px;
+	margin: 5px;
+}
+
+#top a:hover {
+	color: white;
+}
+
+#page {
+	width: 100%;
+	height: 230px;
+	margin-right: 10px;
+	border: 1px solid #ebebeb;
+	background-color: #f5f5f8;
+}
+
+#left {
+	height: auto;
+	background: white;
+	float: left;
+	border: 1px solid #d7d7d7;
+	width: 100%;
+}
+
+#contentMain {
+	margin-left: 28px;
+	margin-top: 12px;
+	float: left;
+	width: 97%;
+	height: 845px;
+	border: 1px solid #d7d7d7;
+	padding: 20px;
+}
+
+#content {
+	width: 100%;
+	height: 100%;
+}
+
+.main {
+	padding-top: 20px;
+}
+
+.main section {
+	display: none;
+	border-top: 1px solid #ddd;
+	padding: 20px;
+}
+
+/*라디오버튼 숨김*/
+.main input[type=radio] {
+	display: none;
+}
+
+.main label {
+	display: inline-block;
+	margin: 0 0 -1px;
+	padding: 15px 25px;
+	font-weight: 600;
+	text-align: center;
+	color: #bbb;
+	border: 1px solid transparent;
+}
+
+.main label:hover {
+	color: #2e9cdf;
+	cursor: pointer;
+}
+
+/*input 클릭시, label 스타일*/
+.main input:checked+label {
+	color: #555;
+	border: 1px solid #ddd;
+	border-top: 2px solid #2e9cdf;
+	border-bottom: 2px solid #ffffff;
+}
+
+#tab0:checked ~ #content0, #tab1:checked ~ #content1, #tab2:checked ~
+	#content2, #tab3:checked ~ #content3, #tab4:checked ~ #content4, #tab5:checked 
+	 ~ #content5, #tab6:checked ~ #content6, #tab7:checked ~ #content7,
+	#tab8:checked ~ #content8, #tab9:checked ~ #content9, #tab10:checked ~
+	#content10 {
+	display: block;
+}

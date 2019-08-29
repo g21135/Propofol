@@ -1,0 +1,179 @@
+@charset "UTF-8";
+
+#floatMenu {
+	position: absolute;
+	width: 200px;
+	height: 200px;
+	left: 85%;
+	top: 15%;
+	background-color: #606060;
+	color: #fff;
+}
+
+.imgBtn{
+	border: none;
+    width: 200px;
+    height: 200px;
+    cursor: pointer;
+}
+
+#todayrecruitment{
+	background: url('${cPath}/img/commuinty/inturn.jpg');
+} 
+#recruitDiv{
+	width: 700px;
+	padding: 20px;
+	margin: 150px auto auto 35%;
+	margin-top: 150px;
+}
+
+.table-job-list {
+  margin: 30px 0 0 18% ;
+  max-width: 1200px;
+}
+.table-job-list .table-wrap {
+  table-layout: fixed;
+  display: table;
+  min-width: 100%;
+  max-width: none;
+  width: 100%;
+}
+.table-job-list .table-wrap .table-header {
+  display: table-header-group;
+  font-size: 15px;
+  text-align: left;
+}
+.table-job-list .table-wrap .table-row {
+  display: table-row;
+}
+@media (max-width: 767px) {
+  .table-job-list .table-wrap .table-row {
+    position: relative;
+    display: block;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e9ecef;
+  }
+}
+.table-job-list .table-wrap .table-body {
+  display: table-row-group;
+}
+@media (max-width: 767px) {
+  .table-job-list .table-wrap .table-body {
+    display: block;
+    border-top: 2px solid #ced4da;
+  }
+}
+.table-job-list .table-wrap .table-cell {
+  display: table-cell;
+  padding: 24px 16px;
+  border-bottom: 1px solid #e9ecef;
+  font-weight: 700;
+  vertical-align: top;
+}
+@media (max-width: 767px) {
+  .table-job-list .table-wrap .table-cell {
+    display: block;
+    padding: 0;
+    width: auto;
+    border: 0;
+    font-size: 14px;
+  }
+}
+.table-job-list .table-wrap .cell-section {
+  width: 200px;
+  font-size: 13px;
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  white-space: nowrap; 
+}
+.table-job-list .table-wrap .cell-position {
+  width: 450px;
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  white-space: nowrap; 
+}
+@media (max-width: 767px) {
+  .table-job-list .table-wrap .cell-section,
+  .table-job-list .table-wrap .cell-position {
+    display: inline-block;
+    margin-right: 16px;
+  }
+}
+@media (max-width: 767px) {
+  .table-job-list .table-wrap .cell-title {
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+.table-job-list .table-wrap .cell-status {
+  width: auto;
+}
+
+@media (max-width: 767px) {
+  .table-job-list .table-wrap .cell-status {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+  }
+}
+.table-job-list .table-wrap .table-header {
+  background-color: #e9ecef;
+  font-size: 15px;
+  font-weight: 700;
+}
+@media (max-width: 767px) {
+  .table-job-list .table-wrap .table-header {
+    display: none;
+  }
+}
+.table-job-list .table-wrap .table-body {
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.table-job-list .table-wrap .table-body .cell-title {
+  font-weight: 400;
+}
+@media (max-width: 767px) {
+  .table-job-list .table-wrap .table-body .cell-section,
+  .table-job-list .table-wrap .table-body .cell-position,
+  .table-job-list .table-wrap .table-body .cell-status {
+    width: 52px;
+  }
+}
+
+.type09 {
+    border-collapse: collapse;
+    text-align: center;
+    line-height: 1.5;
+    
+
+}
+.type09 thead th {
+    padding: 10px;
+    font-size : 40px;
+    font-weight: bold;
+    vertical-align: top;
+    color: #369;
+    border-bottom: 3px solid #036;
+}
+.type09 tbody th {
+    width: 150px;
+    padding: 10px;
+    font-weight: bold;
+    vertical-align: top;
+    border-bottom: 1px solid #ccc;
+    background: #f3f6f7;
+}
+.type09 tbody td {
+    width: 350px;
+    padding: 10px;
+    vertical-align: top;
+    border: 1px solid #ccc;
+}

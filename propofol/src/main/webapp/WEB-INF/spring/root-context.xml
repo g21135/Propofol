@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+<!-- 스키마 종류 : beans, c, p, context -->
+
+<!-- 컨테이너의 계층 구조를 통해 중복 빈 제거 
+DispatcherServlet에 의해 생성되는 하위 컨테이너들에서
+공통적으로 사용할 공통 빈(dao,service..., 웹에 종속되지 않는 legacy bean)들을 등록. -->
+
+<!-- use-default-filters가 true여서 자동등록 가능 -->
+<!-- false로 하고 수동 조작 -->
+<!-- context:include-filter 은 포함할 것-->
+<!-- context:exclude-filter 은 배제할 것-->
+<!-- org.springframework.stereotype.Component를 가지고있는 모든 어노테이션은 자동등록된다. -->
+	<context:component-scan base-package="kr.or.ddit" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+<!-- 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/> -->
+<!-- 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/> -->
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+
+<!-- 상위 컨테이너 : service, dao .... -->
+<!-- 하위 컨테이너 : controller, rest controller, controller advice -->
+
+
+<!-- commons의 fileUplaod api 사용  -->
+<!-- 서블릿 2.5방식  -->
+<!-- part -> FileItem -->
+<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" 
+	p:defaultEncoding="UTF-8"
+	p:maxInMemorySize="#{10*1024}"
+	p:maxUploadSize="#{100*1024*1024}"
+	p:maxUploadSizePerFile="#{100*1024*1024}"
+/>
+<!-- 업로드 제한 정책 
+p:maxInMemorySize="#{10*1024}" 해당사이즈보다 적을 때는 메모리에서 관리, 크면은 임시파일로 관리
+p:maxUploadSize="#{100*1024*1024}" 파일하나당 크기 제한   100mb
+p:maxUploadSizePerFile="#{100*1024*10}" 요청하나당 최대 얼마의 파일 크기를 허용
+-->
+	
+<!-- 
+1. servlet 3.0 방식
+	1) DispatcherServlet 에 multipart-config 설정(web.xml) -> 정책도 여기서 결정한다.
+	2) StandardServletMultipartResolver 를 등록
+
+2. servlet 2.5 방식
+	1) commons-fileupload 를 빌드패스에 추가 
+	2) CommonsMultipartResolver를 등록
+주의 !! id = "multipartResolver"이어야 한다.
+ -->	
+
+<util:properties id="appInfo" location="classpath:kr/or/ddit/appInfo.properties"/>
+<!-- 기타 경로저장용 -->
+
+</beans>

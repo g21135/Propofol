@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.reply.dao.IReplyDAO">
+	<sql id="searchFrag">
+		WHERE POST_NUM = ${searchVO.post_num}
+	</sql>
+
+	<select id="selectReplyCount" resultType="int">
+		SELECT COUNT(*)
+    		FROM REPLY
+    		<include refid="searchFrag" />
+	</select>
+	
+	<select id="selectReplyList" resultType="ReplyVO" parameterType="PagingVO">
+		SELECT B.*
+	        FROM 
+	            (SELECT ROWNUM RNUM, A.*
+	    		FROM (
+	    			SELECT REPLY_NUM, POST_NUM, REPLY_CONTENT, TO_CHAR(REPLY_DATE, 'YYYY-MM-DD') REPLY_DATE, MEM_ID
+	            		FROM REPLY
+	            		<include refid="searchFrag" />
+	            		ORDER BY REPLY_NUM DESC) A 
+	            	) B
+	            WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectReply" parameterType="ReplyVO" resultType="ReplyVO">
+		SELECT *
+			FROM REPLY
+			WHERE REPLY_NUM = #{reply_num}
+	</select>
+	
+	<insert id="insertReply" parameterType="ReplyVO">
+		<selectKey order="BEFORE" resultType="int" keyProperty="reply_num">
+			SELECT REP_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO reply (
+		    REPLY_NUM, POST_NUM, REPLY_CONTENT, REPLY_DATE, MEM_ID
+		) VALUES (
+		   	#{reply_num}, #{post_num}, #{reply_content}, SYSDATE, #{mem_id}
+		)
+	</insert>
+	
+	<update id="updateReply" parameterType="ReplyVO" >
+		UPDATE REPLY
+		    SET
+		    REPLY_CONTENT = #{reply_content},
+		    REPLY_DATE = SYSDATE
+		   WHERE REPLY_NUM = #{reply_num}
+	</update>
+	
+	<delete id="deleteReply" parameterType="ReplyVO">
+		DELETE REPLY
+	    	WHERE REPLY_NUM = #{reply_num}
+	</delete>
+</mapper>

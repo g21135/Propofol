@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.order.dao.IOrderDAO">
+	<sql id="searchFrag">
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
+			<choose>
+				<when test="searchType.equals('type')">
+					AND ORDER_TYPE LIKE '%'||#{searchWord}||'%'
+				</when>
+				<when test="searchType.equals('userId')">
+					AND C.MEM_ID LIKE '%'||#{searchWord}||'%'
+				</when>
+				<otherwise>
+					AND ORDER_TYPE LIKE '%'||#{searchWord}||'%'
+					OR C.MEM_ID LIKE '%'||#{searchWord}||'%'
+				</otherwise>
+			</choose>
+		</if>
+	</sql>
+	
+	<sql id="manageMentFrag">
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(manageMentType)">
+			<choose>
+				<when test="manageMentType.equals('member')">
+					AND C.MEM_ID = #{manageMentId}
+				</when>
+				<when test="manageMentType.equals('admin_orderList')">
+					AND C.ORDER_DATE IS NOT NULL
+					AND C.ORDER_PAY IS NULL
+					AND C.ORDER_END_DATE IS NULL
+				</when>
+				<when test="manageMentType.equals('admin_order_modifyList')">
+					AND C.ORDER_DATE IS NOT NULL
+					AND C.ORDER_PAY IS NOT NULL
+					AND C.ORDER_END_DATE IS NULL
+					AND C.ORDER_TYPE = '수정'
+					AND C.ADMIN_ID = #{manageMentId}
+				</when>
+				<when test="manageMentType.equals('admin_order_produceList')">
+					AND C.ORDER_DATE IS NOT NULL
+					AND C.ORDER_PAY IS NOT NULL
+					AND C.ORDER_END_DATE IS NULL
+					AND C.ORDER_TYPE = '제작'
+					AND C.ADMIN_ID = #{manageMentId}
+				</when>
+				<otherwise>
+				
+				</otherwise>
+			</choose>
+		</if>
+	</sql>
+	
+	<select id="selectOrderListCount" resultType="int" parameterType="PagingVO">
+				SELECT COUNT(*) 
+				FROM ORDER_TB C
+				WHERE 1=1
+			    <include refid="searchFrag" />
+			    <include refid="manageMentFrag" />
+	</select>
+	
+	<resultMap type="OrderTbVO" id="orderMap" autoMapping="true">
+		<id property="order_num" column="ORDER_NUM"/>
+		<collection property="orderFormList" javaType="java.util.List" ofType="OrderFormVO" autoMapping="true"> <!-- 1:N Has Many -->
+			<id property="form_num" column="FORM_NUM"/>
+		</collection>
+	</resultMap>
+	
+	<select id="selectOrderList" resultMap="orderMap" parameterType="PagingVO">
+		SELECT B.*
+			FROM (
+				SELECT ROWNUM RNUM, A.*
+				FROM (
+					SELECT 	C.ORDER_NUM,    MEM_ID,    ORDER_TYPE,
+							    TO_CHAR(ORDER_START_DATE, 'YYYY-MM-DD') ORDER_START_DATE,    
+							    TO_CHAR(ORDER_END_DATE, 'YYYY-MM-DD') ORDER_END_DATE,    
+							    TO_CHAR(ORDER_DATE, 'YYYY-MM-DD') ORDER_DATE,
+							    ORDER_COST,    ORDER_WAY,    ORDER_MEANS,
+							    ORDER_PAY, ADMIN_ID,
+							    FORM_NUM,		FORM_NAME,		FORM_TEL,		FORM_MAIL,
+								FORM_ASK,	FORM_ADDR,		FORM_FACEBOOK,		FORM_INSTA
+					FROM ORDER_TB C LEFT OUTER JOIN ORDER_FORM D ON (C.ORDER_NUM = D.ORDER_NUM)
+					WHERE 1=1
+					<include refid="searchFrag" />
+					<include refid="manageMentFrag" />
+					ORDER BY ORDER_NUM DESC
+				) A
+			) B
+       		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectOrder" parameterType="int" resultType="OrderTbVO">
+		SELECT 	ORDER_NUM,    MEM_ID,    ORDER_TYPE,
+				    TO_CHAR(ORDER_START_DATE, 'YYYY-MM-DD') ORDER_START_DATE,    
+				    TO_CHAR(ORDER_END_DATE, 'YYYY-MM-DD') ORDER_END_DATE,    
+				    TO_CHAR(ORDER_DATE, 'YYYY-MM-DD') ORDER_DATE,
+				    ORDER_COST,    ORDER_WAY,    ORDER_MEANS,
+				    ORDER_PAY, ADMIN_ID,
+				    FORM_NUM,		FORM_NAME,		FORM_TEL,		FORM_MAIL,
+					FORM_ASK,	FORM_ADDR,		FORM_FACEBOOK,		FORM_INSTA
+		  FROM ORDER_TB A LEFT OUTER JOIN ORDER_FORM B ON (A.ORDER_NUM = B.ORDER_NUM)
+		WHERE ORDER_NUM = #{order_num}
+	</select>
+	
+	<update id="choiceOrder" parameterType="OrderTbVO">
+		UPDATE ORDER_TB
+		SET ADMIN_ID = #{admin_id},
+		ORDER_PAY = 'Y'
+		WHERE ORDER_NUM = #{order_num}
+	</update>
+	
+	<update id="completionOrder" parameterType="int">
+		UPDATE ORDER_TB
+		SET ORDER_END_DATE = SYSDATE
+		WHERE ORDER_NUM = #{order_num}
+	</update>
+	
+</mapper>

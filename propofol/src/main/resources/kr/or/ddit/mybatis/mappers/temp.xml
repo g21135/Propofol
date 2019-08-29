@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.portfolio.dao.ITempDAO">
+
+
+	<insert id="insert">
+		INSERT ALL
+		<foreach collection="tempArray" item="temp" separator=" ">
+			INTO TEMP (
+			TEMP_NUM,
+			PORT_NUM,
+			TEMP_MENU,
+			PAGE_IMG,
+			TEMP_PAGE
+			) VALUES (
+			TEMP_FUNC,
+			#{port_num},
+			#{temp.temp_menu},
+			#{temp.page_img},
+			#{temp.temp_page}
+			)
+		</foreach>
+		SELECT *
+		FROM DUAL
+	</insert>
+
+	<update id="update">
+			UPDATE TEMP
+			SET
+			TEMP_MENU = #{temp_menu},
+			TEMP_PAGE = #{temp_page},
+			PAGE_IMG = #{page_img}
+			WHERE
+			TEMP_NUM = #{temp_num}
+	</update>
+	
+	<select id="select" resultType="int">
+		SELECT 
+		 	TEMP_NUM
+		FROM TEMP
+		WHERE PORT_NUM = #{port_num}
+		ORDER BY 1 
+	</select>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.portLike.dao.IPortLikeDAO">
+	<insert id="insertLike" parameterType="PortLikeVO">
+		<selectKey order="BEFORE" resultType="int" keyProperty="like_num">
+			SELECT LIKE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO PORTLIKE (LIKE_NUM, PORT_NUM, MEM_ID) 
+    		VALUES (#{like_num}, #{port_num}, #{mem_id})
+	</insert>
+	
+	<delete id="deleteLike" parameterType="PortLikeVO">
+		DELETE FROM PORTLIKE 
+			WHERE PORT_NUM = #{port_num}
+			  AND MEM_ID = #{mem_id}
+	</delete>
+</mapper>

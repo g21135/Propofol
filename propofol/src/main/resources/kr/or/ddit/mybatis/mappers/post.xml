@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.post.dao.IPostDAO">
+	<sql id="searchFrag">
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
+			<choose>
+				<when test="searchType.equals('title')">
+					AND POST_NAME LIKE '%'||#{searchWord}||'%'
+				</when>
+				<when test="searchType.equals('content')">
+					AND POST_CONTENT LIKE '%'||#{searchWord}||'%'
+				</when>
+				<when test="searchType.equals('member')">
+					AND MEM_ID LIKE '%'||#{searchWord}||'%'
+				</when>
+				<otherwise>
+					AND POST_NAME LIKE '%'||#{searchWord}||'%'
+					OR POST_CONTENT LIKE '%'||#{searchWord}||'%'
+				</otherwise>
+			</choose>
+		</if>
+		<choose>
+			<when test="searchType eq 'notice'">
+				AND POST_TYPE = 1
+			</when>
+			<when test="searchType eq 'error'">
+				AND POST_TYPE = 2
+			</when>
+			<when test="searchType eq 'improvement'">
+				AND POST_TYPE = 3
+			</when>
+		</choose>
+	</sql>
+	
+	<sql id="post_parent">
+		<if test="post_parent != null">
+			#{post_parent}
+		</if>
+		<if test="post_parent == null">
+			NULL
+		</if>
+	</sql>
+	
+	<sql id="post_type">
+		<if test="post_type != null">
+			#{post_type}
+		</if>
+		<if test="post_type == null">
+			NULL
+		</if>
+	</sql>
+
+	<select id="selectPostListCount" resultType="int" parameterType="PagingVO">
+			SELECT COUNT(*) 
+			    FROM POST
+			    WHERE BOARD_NUM=#{searchVO.board_num}
+			    <include refid="searchFrag" />
+	</select>
+	
+	<select id="selectPostList" resultType="PostVO" parameterType="PagingVO">
+		SELECT B.*
+			FROM
+				(SELECT ROWNUM RNUM, A.*
+					FROM (
+				        SELECT POST.POST_NUM, 
+				               LPAD(' ', 2*(LEVEL-1))|| POST_NAME POST_NAME, 
+				               LEVEL POST_DEPTH,
+						       MEM_ID, TYPE_NAME, TO_CHAR(POST_DATE, 'YYYY-MM-DD') POST_DATE, POST_HIT, POST_PASS, BOARD_NUM, REPLY_CNT, POST_REPORT
+						FROM POST  LEFT OUTER JOIN TYPE ON (POST.POST_TYPE = TYPE.TPYE_NUM)
+	                               LEFT OUTER JOIN (SELECT COUNT(REPLY_NUM) REPLY_CNT, POST_NUM
+	                                                 FROM REPLY
+	                                                 GROUP BY POST_NUM
+					) REPLY ON (POST.POST_NUM = REPLY.POST_NUM)
+						WHERE BOARD_NUM=#{searchVO.board_num} 
+						<include refid="searchFrag" />
+						START WITH POST_PARENT IS NULL
+						CONNECT BY PRIOR POST.POST_NUM = POST_PARENT
+						ORDER SIBLINGS BY POST_NUM DESC
+				) A
+			) B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<resultMap type="PostVO" id="postMap" autoMapping="true">
+		<id property="post_num" column="POSTNUM"/>
+		<collection property="attachList" ofType="AttachVO" autoMapping="true">
+		</collection>
+	</resultMap>
+	
+	<select id="selectPost" parameterType="int" resultMap="postMap">
+		SELECT A.POST_NUM POSTNUM, A.MEM_ID MEM_ID, POST_PARENT, POST_HIT, POST_NAME, POST_CONTENT, POST_DATE, TYPE_NAME, POST_TYPE,
+	      		ATTACH_NUM, ATT_NAME, ATT_SAVENAME, ATT_MIME, ATT_SIZE, ATT_FANCYSIZE, ATT_DOWNLOAD
+		   FROM POST A LEFT OUTER JOIN TYPE B ON (A.POST_TYPE = B.TPYE_NUM) 
+		               LEFT OUTER JOIN ATTACH C ON (A.POST_NUM = C.POST_NUM)
+		   WHERE A.POST_NUM = #{post_num}
+	</select>
+	
+	<select id="typeList" resultType="TypeVO">
+	   SELECT TPYE_NUM, TYPE_NAME
+	   FROM TYPE
+	</select>
+	
+	<update id="incrementHit" parameterType="int">
+		UPDATE POST
+	        SET
+	    	POST_HIT = POST_HIT + 1
+			WHERE POST_NUM = #{post_num}
+	</update>
+	 
+	<insert id="insertPost" parameterType="PostVO">
+		<selectKey order="BEFORE" resultType="int" keyProperty="post_num">
+			SELECT POST_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO POST (POST_NUM, POST_PARENT, BOARD_NUM, MEM_ID, POST_TYPE, POST_NAME, POST_CONTENT, POST_HIT, POST_DATE) 
+    		VALUES (#{post_num}, <include refid="post_parent" />, #{board_num}, #{mem_id}, <include refid="post_type" />, #{post_name}, #{post_content}, 0, SYSDATE)
+	</insert>
+	
+	<update id="updatePost" parameterType="PostVO">
+		UPDATE POST
+		    SET
+		    POST_TYPE = <include refid="post_type" />,
+		    POST_NAME = #{post_name},
+		    POST_CONTENT = #{post_content},
+		    POST_DATE = SYSDATE
+		    WHERE POST_NUM = #{post_num}
+	</update>
+	
+	<update id="updateReportPost" parameterType="PostVO">
+		UPDATE POST
+		    SET
+		    POST_REPORT = 2
+		    WHERE POST_NUM = #{post_num}
+	</update>
+	
+	<delete id="deletePost" statementType="CALLABLE">
+		{ CALL #{rowcnt,mode=OUT,jdbcType=INTEGER} := DELETEPOSTFUNC(#{post_num,mode=IN}) }
+	</delete>
+	
+	<delete id="deleteAllPost" statementType="CALLABLE">
+		{ CALL #{rowcnt,mode=OUT,jdbcType=INTEGER} := DELETEALLPOSTFUNC(#{post_num,mode=IN}) }
+	</delete>
+	
+	<delete id="deleteReportPost" statementType="CALLABLE">
+		{ CALL #{rowcnt,mode=OUT,jdbcType=INTEGER} := DELETEREPORTFUNC(#{post_num,mode=IN}) }
+	</delete>
+</mapper>

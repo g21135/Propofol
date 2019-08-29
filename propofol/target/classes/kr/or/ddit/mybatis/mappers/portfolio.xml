@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.portfolio.dao.IPortfolioDAO">
+	<sql id="searchFrag">
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
+			<choose>
+				<when test="searchType.equals('theme')">
+					AND C.THEME_NUM IN (SELECT THEME_NUM
+											       FROM THEME 
+											       WHERE THEME_NAME LIKE '%'||#{searchWord}||'%')
+				</when>
+				<when test="searchType.equals('userId')">
+					AND C.MEM_ID LIKE '%'||#{searchWord}||'%'
+				</when>
+				<otherwise>
+					AND C.THEME_NUM IN (SELECT THEME_NUM
+											       FROM THEME
+											       WHERE THEME_NAME LIKE '%'||#{searchWord}||'%')
+					OR C.MEM_ID LIKE '%'||#{searchWord}||'%'
+				</otherwise>
+			</choose>
+		</if>
+	</sql>
+	
+	<sql id="manageMentFrag">
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(manageMentType)">
+			<choose>
+				<when test="manageMentType.equals('member')">
+					AND C.MEM_ID = #{manageMentId}
+				</when>
+				<when test="manageMentType.equals('admin_all') or manageMentType.equals('admin_suc')">
+					AND C.PORT_BAN IS NULL
+				</when>
+				<when test="manageMentType.equals('admin_black')">
+					AND C.PORT_BAN = 'Y'
+				</when>
+				<otherwise>
+				
+				</otherwise>
+			</choose>
+		</if>
+		<if test="@org.apache.commons.lang3.StringUtils@isBlank(manageMentType)">
+			AND C.PORT_PUBLIC = 'Y'
+			AND C.PORT_BAN IS NULL
+		</if>
+	</sql>
+
+	<select id="selectPortfolioListCount" resultType="int" parameterType="PagingVO">
+				SELECT COUNT(*) 
+				FROM PORTFOLIO C
+				WHERE 1=1
+				<include refid="manageMentFrag" />
+			    <include refid="searchFrag" />
+	</select>
+	
+	<resultMap type="PortfolioVO" id="portfolioMap" autoMapping="true">
+		<id property="port_num" column="PORT_NUM"/>
+		<collection property="themeList" javaType="java.util.List" ofType="ThemeVO" autoMapping="true"> <!-- 1:N Has Many -->
+			<id property="theme_num" column="THEME_NUM"/>
+		</collection>
+	</resultMap>
+	
+	<select id="selectPortfolioList" resultMap="portfolioMap" parameterType="PagingVO">
+		SELECT B.*
+			FROM (
+				SELECT ROWNUM RNUM, A.*
+				FROM (
+					SELECT 	PORT_NUM,    MEM_ID,    PORT_NAME,
+							    PORT_MAKE,    PORT_BAN,    PORT_PUBLIC,
+							    PORT_READ,    PORT_SCRAP,    PORT_SHARE,
+							    PORT_ADDR,    C.THEME_NUM,    TO_CHAR(PORT_DATE, 'YYYY-MM-DD') PORT_DATE,
+							    PORT_IMG, PORT_SUC, PORT_SNS_NAME,    PORT_SNS_ADDR,    PORT_EXPLAIN,
+			    				PORT_USER_ADDR,    QUESTION_TEL,    QUESTION_SNS,    QUESTION_MAP, PORT_LIKE,
+							    D.THEME_NAME, D.THEME_IMG
+					FROM PORTFOLIO C LEFT OUTER JOIN THEME D ON (C.THEME_NUM = D.THEME_NUM)
+					WHERE 1=1
+					<include refid="manageMentFrag" />
+					<include refid="searchFrag" />
+					ORDER BY PORT_NUM DESC
+				) A
+			) B
+       		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	
+	<resultMap type="PortfolioVO" id="portfolioSelectMap" autoMapping="true">
+		<id property="port_num" column="PORTNUM"/>
+		<collection property="tempList" javaType="java.util.List" ofType="TempVO" autoMapping="true"> <!-- 1:N Has Many -->
+			<id property="temp_num" column="TEMP_NUM"/>
+		</collection>
+	</resultMap>
+	<select id="selectPortfolio" parameterType="int" resultMap="portfolioSelectMap">
+		SELECT 	A.PORT_NUM AS PORTNUM,    MEM_ID,    PORT_NAME,
+				    PORT_MAKE,    PORT_BAN,    PORT_PUBLIC,
+				    PORT_READ,    PORT_SCRAP,    PORT_SHARE,
+				    PORT_ADDR,    TO_CHAR(PORT_DATE, 'YYYY-MM-DD') PORT_DATE,
+				    PORT_IMG,     PORT_SUC,	 PORT_TELL_NUMBER,
+				    PORT_SNS_NAME,	PORT_SNS_ADDR,	PORT_EXPLAIN,	PORT_USER_ADDR,
+				    QUESTION_TEL, 
+				    QUESTION_SNS, 
+				    QUESTION_MAP,
+					TEMP_NUM,
+					TEMP_MENU,
+					TEMP_PAGE,
+					PAGE_IMG
+		FROM PORTFOLIO A LEFT OUTER JOIN TEMP C ON (A.PORT_NUM = C.PORT_NUM) 
+		WHERE A.PORT_NUM = #{port_num}
+		ORDER BY TEMP_NUM
+	</select>
+	
+	<select id="selectSuccessPortfolioListCount" resultType="int" parameterType="PagingVO">
+				SELECT COUNT(*) 
+				  FROM PORTFOLIO C
+			    WHERE PORT_SUC = 'Y'
+			    <include refid="manageMentFrag" />
+			    <include refid="searchFrag" />
+	</select>
+	
+	<select id="selectSuccessPortfolioList" resultMap="portfolioMap" parameterType="PagingVO">
+		SELECT B.*
+			FROM (
+				SELECT ROWNUM RNUM, A.*
+				FROM (
+					SELECT 	PORT_NUM,    MEM_ID,    PORT_NAME,
+							    PORT_MAKE,    PORT_BAN,    PORT_PUBLIC,
+							    PORT_READ,    PORT_SCRAP,    PORT_SHARE,
+							    PORT_ADDR,    C.THEME_NUM,    TO_CHAR(PORT_DATE, 'YYYY-MM-DD') PORT_DATE,
+							    PORT_IMG, PORT_SUC, PORT_SNS_NAME,    PORT_SNS_ADDR,    PORT_EXPLAIN,
+			    				PORT_USER_ADDR,    QUESTION_TEL,    QUESTION_SNS,    QUESTION_MAP, (SELECT COUNT(*) FROM PORTLIKE D WHERE D.PORT_NUM=C.PORT_NUM GROUP BY C.PORT_NUM) PORT_LIKE,
+							    D.THEME_NAME, D.THEME_IMG
+					FROM PORTFOLIO C LEFT OUTER JOIN THEME D ON (C.THEME_NUM = D.THEME_NUM)
+					WHERE PORT_SUC = 'Y'
+					<include refid="manageMentFrag" />
+					<include refid="searchFrag" />
+					ORDER BY PORT_NUM DESC
+				) A
+			) B
+       		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="themeList" resultType="ThemeVO">
+	   SELECT THEME_NUM, THEME_NAME, THEME_IMG
+	   FROM THEME
+	</select>
+	
+	<update id="blackPortfolio" parameterType="int">
+		UPDATE PORTFOLIO 
+		SET PORT_BAN = 'Y'
+		WHERE PORT_NUM = #{port_num}
+	</update>
+	
+	<update id="readPortfolio" parameterType="int">
+		UPDATE PORTFOLIO 
+		SET PORT_READ = 'Y'
+		WHERE PORT_NUM = #{port_num}
+	</update>
+
+	<update id="unblackPortfolio" parameterType="int">
+		UPDATE PORTFOLIO 
+		SET PORT_BAN = null
+		WHERE PORT_NUM = #{port_num}
+	</update>
+	
+	<update id="publicSettingPortfolio" parameterType="PortfolioVO">
+		UPDATE PORTFOLIO 
+		SET PORT_PUBLIC = #{port_public}
+		WHERE PORT_NUM = #{port_num}
+	</update>
+	
+	<update id="deletePortfolio" parameterType="int">
+		DELETE FROM PORTFOLIO
+        WHERE PORT_NUM = #{port_num}
+	</update>
+	
+	
+	<insert id="insertPort">
+		<selectKey order="BEFORE" resultType="int" keyProperty="port_num">
+	      SELECT PORTSEQ.NEXTVAL FROM DUAL
+	   </selectKey>
+		INSERT INTO portfolio (
+		    port_num,
+		    mem_id,
+		    port_name,   
+		    port_date
+		    <if test="port_make != null">
+		    ,port_make
+		    </if>
+		    <if test="port_ban != null">
+		    ,port_ban
+		    </if>
+		    <if test="port_public != null">
+		    ,port_public
+		    </if>
+		    <if test="port_read != null">
+		    ,port_read
+		    </if>
+		    <if test="port_scrap != null">
+		    ,port_scrap
+		    </if>
+		    <if test="port_share != null">
+		    ,port_share
+		    </if>
+		    <if test="port_addr != null">
+		    ,port_addr
+		    </if>
+		    <if test="theme_num != null">
+		    ,theme_num
+		    </if>
+		    <if test="port_img != null">
+		    ,port_img
+		    </if>
+		    <if test="port_suc != null">
+		    ,port_suc
+		    </if>
+		    <if test="port_sns_name != null">
+		    ,port_sns_name
+		    </if>
+		    <if test="port_explain != null">
+		    ,port_sns_addr
+		    </if>
+		    <if test="port_explain != null">
+		    ,port_explain
+		    </if>
+		    <if test="port_user_addr != null">
+		    ,port_user_addr
+		    </if>
+		     <if test="question_tel != null">
+		    , question_tel
+		    </if>
+		    <if test="question_sns != null">
+		    , question_sns
+		    </if>
+		    <if test="question_map != null">
+		    , question_map
+		    </if>
+		     <if test="port_tell_number != null">
+		    , port_tell_number
+		    </if>
+		) VALUES (
+		    #{port_num},
+		    #{mem_id},
+		    #{port_name},
+		    SYSDATE
+		    <if test="port_make != null">
+		    , #{port_make}
+		    </if>
+		    <if test="port_ban != null">
+		    , #{port_ban}
+		    </if>
+		    <if test="port_public != null">
+		    , #{port_public}
+		    </if>
+		    <if test="port_read != null">
+		    , #{port_read}
+		    </if>
+		    <if test="port_scrap != null">
+		    , #{port_scrap}
+		    </if>
+		    <if test="port_share != null">
+		    , #{port_share}
+		    </if>
+		    <if test="port_addr != null">
+		    , #{port_addr}
+		    </if>
+		    <if test="theme_num != null">
+		    , #{theme_num}
+		    </if>
+		    <if test="port_img != null">
+		    , #{port_img}
+		    </if>
+		    <if test="port_suc != null">
+		    , #{port_suc}
+		    </if>
+		    <if test="port_sns_name != null">
+		    , #{port_sns_name}
+		    </if>
+		    <if test="port_sns_addr != null">
+		    , #{port_sns_addr}
+		    </if>
+		    <if test="port_explain != null">
+		    , #{port_explain}
+		    </if>
+		    <if test="port_user_addr != null">
+		    , #{port_user_addr}
+		    </if>
+		    <if test="question_tel != null">
+		    , #{question_tel}
+		    </if>
+		    <if test="question_sns != null">
+		    , #{question_sns}
+		    </if>
+		    <if test="question_map != null">
+		    , #{question_map}
+		    </if>
+		    <if test="port_tell_number != null">
+		    , #{port_tell_number}
+		    </if>
+		)
+	</insert>
+	
+	<update id="updatePort">
+		UPDATE PORTFOLIO
+		SET 
+		    <if test="port_name != null">
+		    PORT_NAME = #{port_name},
+		    </if>
+		    <if test="port_make != null">
+		    PORT_MAKE = #{port_make},
+		    </if>
+		    <if test="port_make != null">
+		    PORT_MAKE = #{port_make},
+		    </if>
+		    <if test="port_ban != null">
+		    PORT_BAN = #{port_ban},
+		    </if>
+		    <if test="port_public != null">
+		    PORT_PUBLIC = #{port_public},
+		    </if>
+		    <if test="port_read != null">
+		    PORT_READ = #{port_read},
+		    </if>
+		    <if test="port_scrap != null">
+		    PORT_SCRAP = #{port_scrap},
+		    </if>
+		    <if test="port_share != null">
+		    PORT_SHARE = #{port_share},
+		    </if>
+		    <if test="port_addr != null">
+		    PORT_ADDR = #{port_addr},
+		    </if>
+		    PORT_DATE = SYSDATE,
+		    <if test="port_img != null">
+		    PORT_IMG = #{port_img},
+		    </if>
+		    <if test="port_suc != null">
+		    PORT_SUC = #{port_suc},
+		    </if>
+		    <if test="port_sns_name != null">
+		    PORT_SNS_NAME = #{port_sns_name},
+		    </if>
+		    <if test="port_sns_addr != null">
+		    PORT_SNS_ADDR = #{port_sns_addr},
+		    </if>
+		    <if test="port_explain != null">
+		    PORT_EXPLAIN = #{port_explain},
+		    </if>
+		    <if test="port_user_addr != null">
+		    PORT_USER_ADDR = #{port_user_addr},
+		    </if>
+		    <if test="question_tel != null">
+		    QUESTION_TEL = #{question_tel},
+		    </if>
+		    <if test="question_sns != null">
+		    QUESTION_SNS = #{question_sns},
+		    </if>
+		    <if test="question_map != null">
+		    QUESTION_MAP = #{question_map},
+		    </if>
+		    <if test="port_tell_number != null">
+		    port_tell_number = #{port_tell_number}
+		    </if>
+		WHERE
+		    PORT_NUM = #{port_num}
+	</update>
+	
+	<select id="checkPort" resultType="int">
+	SELECT COUNT(*)
+	FROM MEMBER M INNER JOIN PORTFOLIO P ON (M.MEM_ID = P.MEM_ID)
+	WHERE M.MEM_ID = #{mem_id}
+	</select>
+</mapper>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd" >
+<tiles-definitions>
+	<definition name="parent" template="/WEB-INF/views/index.jsp">
+		<put-attribute name="title" value="Propofol - 포트폴리오 제작" />
+		<put-attribute name="topMenu" value="/WEB-INF/views/mainLayout/topMenu.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/views/mainLayout/footer.jsp" />
+	</definition>
+	
+	<!-- definition : 화면 하나 == logical view name -->
+	<definition name="index" extends="parent">
+		<put-attribute name="content" value="/WEB-INF/views/mainLayout/content.jsp" />
+	</definition>
+
+   <definition name="parent" template="/WEB-INF/views/index.jsp">
+      <put-attribute name="title" value="Propofol - 포트폴리오 제작" />
+      <put-attribute name="topMenu" value="/WEB-INF/views/mainLayout/topMenu.jsp" />
+      <put-attribute name="footer" value="/WEB-INF/views/mainLayout/footer.jsp" />
+   </definition>
+   
+   <!-- definition : 화면 하나 == logical view name -->
+   <definition name="index" extends="parent">
+      <put-attribute name="content" value="/WEB-INF/views/mainLayout/content.jsp" />
+   </definition>
+
+   <definition name="coummunity/recruit" extends="parent" preparer="prepareCommunity">
+      <put-attribute name="content" value="/WEB-INF/views/coummunity/recruit.jsp" />
+   </definition>
+
+   <definition name="coummunity/jobnews" extends="parent" preparer="prepareCommunity">
+      <put-attribute name="content" value="/WEB-INF/views/coummunity/jobnews.jsp" />
+   </definition>
+   
+   <definition name="Pay/addPayment" extends="parent" preparer="prepareCommunity">
+      <put-attribute name="content" value="/WEB-INF/views/Pay/addPayment.jsp" />
+   </definition>
+   
+   <definition name="Pay/PayList" extends="parent" preparer="prepareCommunity">
+      <put-attribute name="content" value="/WEB-INF/views/Pay/PayList.jsp" />
+   </definition>
+   
+   <definition name="noticeBoards/*" extends="parent">
+      <put-attribute name="content" value="/WEB-INF/views/noticeBoards/{1}.jsp" />
+   </definition>
+
+
+   <definition name="parent2" template="/WEB-INF/views/index_left.jsp">
+      <put-attribute name="title" value="Propofol - 포트폴리오 제작" />
+      <put-attribute name="topMenu" value="/WEB-INF/views/mainLayout/topMenu.jsp" />
+      <put-attribute name="leftMenu" value="/WEB-INF/views/mainLayout/leftMenu.jsp" />
+      <put-attribute name="footer" value="/WEB-INF/views/mainLayout/footer.jsp" />
+   </definition>
+   
+   <definition name="member/*/*" extends="parent2" preparer="prepareViewMemberLeftMenu">
+      <put-attribute name="leftMenu" value="/WEB-INF/views/member/memberLeft.jsp" />
+      <put-attribute name="content"   value="/WEB-INF/views/member/{1}/{2}.jsp" />
+   </definition>
+
+   <definition name="find/findMember/*" extends="parent2">
+      <put-attribute name="leftMenu" value="/WEB-INF/views/find/findMemberLeft.jsp" />
+      <put-attribute name="content"  value="/WEB-INF/views/find/findMember/{1}.jsp" />
+   </definition>
+
+   <definition name="noticeBoards/*" extends="parent2" preparer="prepareViewPostLeftMenu">
+      <put-attribute name="leftMenu" value="/WEB-INF/views/noticeBoards/NoticeLeftMenu.jsp"></put-attribute>
+      <put-attribute name="content" value="/WEB-INF/views/noticeBoards/{1}.jsp"></put-attribute>
+   </definition>
+   
+   <definition name="freeBoards/*" extends="parent2" preparer="prepareViewPostLeftMenu">
+      <put-attribute name="leftMenu" value="/WEB-INF/views/freeBoards/freeLeftMenu.jsp"></put-attribute>
+      <put-attribute name="content" value="/WEB-INF/views/freeBoards/{1}.jsp"></put-attribute>
+   </definition>
+
+   <definition name="report/*" extends="parent2" preparer="prepareViewPostLeftMenu">
+      <put-attribute name="leftMenu" value="/WEB-INF/views/report/reportLeftMenu.jsp"></put-attribute>
+      <put-attribute name="content" value="/WEB-INF/views/report/{1}.jsp"></put-attribute>
+   </definition>
+   
+   <definition name="faq/*" extends="parent2" preparer="prepareViewCustomerLeftMenu">
+      <put-attribute name="leftMenu" value="/WEB-INF/views/faq/faqLeftMenu.jsp"></put-attribute>
+      <put-attribute name="content" value="/WEB-INF/views/faq/{1}.jsp"></put-attribute>
+   </definition>
+   
+   <definition name="qna/*" extends="parent2" preparer="prepareViewCustomerLeftMenu">
+      <put-attribute name="leftMenu" value="/WEB-INF/views/qna/qnaLeftMenu.jsp"></put-attribute>
+      <put-attribute name="content" value="/WEB-INF/views/qna/{1}.jsp"></put-attribute>
+   </definition>
+   
+   <definition name="suggest/*" extends="parent2" preparer="prepareViewCustomerLeftMenu">
+      <put-attribute name="leftMenu" value="/WEB-INF/views/suggest/suggestLeftMenu.jsp"></put-attribute>
+      <put-attribute name="content" value="/WEB-INF/views/suggest/{1}.jsp"></put-attribute>
+   </definition>
+   
+
+   <definition name="parent3" template="/WEB-INF/views/makePortfolio/main.jsp">
+      <put-attribute name="title" value="Propofol - 포트폴리오 제작" />
+      <put-attribute name="top" value="/WEB-INF/views/makePortfolio/top.jsp" />
+      <put-attribute name="page" value="/WEB-INF/views/makePortfolio/page.jsp" />
+      <put-attribute name="left" value="/WEB-INF/views/makePortfolio/left.jsp" />
+      <put-attribute name="right" value="/WEB-INF/views/makePortfolio/right.jsp" />
+   </definition>
+   
+   <definition name="makePortfolio/main" extends="parent3">
+      <put-attribute name="content" value="/WEB-INF/views/makePortfolio/content.jsp" />
+   </definition>
+   
+   
+   <definition name="portfolio/portfolioList" extends="parent2">
+       <put-attribute name="leftMenu" value="/WEB-INF/views/portfolio/portfolio_left.jsp"/>
+	   <put-attribute name="content" value="/WEB-INF/views/portfolio/portfolioList.jsp"/>
+	</definition>
+	
+	
+	<definition name="portfolio/successPortfolio" extends="parent2">
+       <put-attribute name="leftMenu" value="/WEB-INF/views/portfolio/portfolio_left.jsp"/>
+	   <put-attribute name="content" value="/WEB-INF/views/portfolio/successPortfolio.jsp"/>
+	</definition>
+	
+	<definition name="introduction/homeintroduction" extends="parent2" preparer="prepareViewCommunityLeftMenu">
+       <put-attribute name="leftMenu" value="/WEB-INF/views/introduction/homeintroduction_left.jsp"/>
+	   <put-attribute name="content" value="/WEB-INF/views/introduction/homeintroduction.jsp"/>
+	</definition>
+	
+	<definition name="introduction/operationPolicy" extends="parent2" preparer="prepareViewCommunityLeftMenu"> 
+       <put-attribute name="leftMenu" value="/WEB-INF/views/introduction/homeintroduction_left.jsp"/>
+	   <put-attribute name="content" value="/WEB-INF/views/introduction/operationPolicy.jsp"/>
+	</definition>
+	
+	<definition name="introduction/directions" extends="parent2" preparer="prepareViewCommunityLeftMenu">
+       <put-attribute name="leftMenu" value="/WEB-INF/views/introduction/homeintroduction_left.jsp"/>
+	   <put-attribute name="content" value="/WEB-INF/views/introduction/directions.jsp"/>
+	</definition>
+	
+	<definition name="introduction/instructions" extends="parent2" preparer="prepareViewCommunityLeftMenu">
+       <put-attribute name="leftMenu" value="/WEB-INF/views/introduction/homeintroduction_left.jsp"/>
+	   <put-attribute name="content" value="/WEB-INF/views/introduction/instructions.jsp"/>
+	</definition>
+	   
+	<definition name="parent4" template="/WEB-INF/views/managementPortfolio/main.jsp">
+      <put-attribute name="title" value="Propofol - 포트폴리오 제작" />
+		<put-attribute name="topMenu" value="/WEB-INF/views/managementPortfolio/top.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/views/managementPortfolio/footer.jsp" />
+   </definition>
+   
+	<definition name="managementPortfolio/main" extends="parent4">
+	   <put-attribute name="content" value="/WEB-INF/views/managementPortfolio/content.jsp"/>
+	</definition>
+	
+	<definition name="managementPortfolio/*/*" extends="parent4">
+	   <put-attribute name="content" value="/WEB-INF/views/managementPortfolio/{1}/{2}.jsp"/>
+	</definition>
+	
+</tiles-definitions>

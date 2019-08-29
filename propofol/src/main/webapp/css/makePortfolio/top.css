@@ -1,0 +1,121 @@
+@charset "UTF-8";
+
+.left {
+	float: left;
+	margin: 3px;
+}
+
+.right {
+	float: right;
+	margin: 3px;
+}
+
+.input-protName {
+	float: left;
+	font-size: 18px;
+	width: 300px;
+	height: 60px;
+	position: relative;
+	display: inline-block;
+	overflow: hidden;
+	margin-left: 25px;
+}
+
+.input-protName>input[type=text] {
+	background: #1a1a1a;
+	width: 100%;
+	height: 50px;
+	color: gray;
+	border: none;
+	border-bottom: 2px solid #1a1a1a;
+	outline: none;
+	margin-bottom: 10px;
+}
+
+.input-protName>input[type=text]:hover {
+	color: white;
+}
+
+.input-protName>input[type=text]:focus {
+	color: white;
+}
+
+.top-underline-animation {
+	transition: all 0.5s;
+	display: inline-block;
+	bottom: 20px;
+	left: -100%;
+	position: absolute;
+	width: 100%;
+	height: 2px;
+	background-color: #808080;
+}
+
+.input-protName>input[type=text]:focus+.top-underline-animation {
+	left: 0;
+}
+
+.config {
+	color: gray;
+	font-size: 16px;
+}
+
+#configSapn {
+	color: gray;
+	float: left;
+	border: 1px solid gray;
+	border-radius: 25px;
+	padding: 4px;
+	margin-top: 10px;
+	margin-left: 20px;
+	cursor: pointer;
+}
+
+#configBubble {
+	border: 1px solid #1a1a1a;
+	z-index: 100000;
+	position: relative;
+	margin: 0 auto;
+	top: 60px;
+	width: 700px;
+	height: 700px;
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+}
+
+.config-td1 {
+	width: 100%;
+	height: 43px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.map_wrap {
+	position: relative;
+	width: 100%;
+	height: 350px;
+}
+
+.hAddr {
+	position: absolute;
+    bottom: 332px;
+	border-radius: 2px;
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	z-index: 1;
+	padding: 5px;
+}
+
+#centerAddr {
+	display: block;
+	margin-top: 2px;
+	font-weight: normal;
+}
+
+.bAddr {
+	padding: 5px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}

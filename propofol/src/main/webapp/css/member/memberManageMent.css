@@ -1,0 +1,109 @@
+@charset "UTF-8";
+
+#mng_container {float:left;width:90%;min-height:200px;height:auto !important;height:auto; font-size:1em;zoom:1}
+#mng_container:after {display:block;visibility:hidden;clear:both;content:""}
+
+/* 목록 버튼 */
+#mng_list a.btn_b01 {}
+#mng_list a.btn_b01:focus, #f_list a.btn_b01:hover {}
+#mng_list a.btn_b02 {}
+#mng_list a.btn_b02:focus, #f_list a.btn_b02:hover {}
+#mng_list a.btn_admin {} /* 관리자 전용 버튼 */
+#mng_list a.btn_admin:focus, #f_list .btn_admin:hover {}
+
+/* 기본 테이블 */
+/* 목록 테이블 */
+#mng_list .tbl_head01 {}
+#mng_list .tbl_head01 caption {}
+#mng_list .tbl_head01 thead th {}
+#mng_list .tbl_head01 thead a {}
+#mng_list .tbl_head01 thead th input {} /* middle 로 하면 게시판 읽기에서 목록 사용시 체크박스 라인 깨짐 */
+#mng_list .tbl_head01 tfoot th {}
+#mng_list .tbl_head01 tfoot td {}
+#mng_list .tbl_head01 tbody th {}
+#mng_list .tbl_head01 td {}
+#mng_list .tbl_head01 a {}
+#mng_list td.empty_table {}
+
+.mng_cate_link{display:inline-block;padding-top:8px;}
+.mng_cate_link {display: inline-block;color: #c89b43;height: 20px;font-size:0.92em}
+
+/* 게시판 목록 */
+#mng_list {position:relative}
+#mng_list:after {display:block;visibility:hidden;clear:both;content:""}
+
+/* 게시판 목록 */
+.mng_table{width:100%;border-top:2px solid #e5e5e5; margin-bottom:20px;}
+.mng_table .th_ask,
+.mng_table .th_chk{width:60px !important;}
+.mng_td{padding:0px !important; margin:0px; border-bottom:0px !important;}
+.mng_list{width:100%; margin:0px; padding:0px; list-style:none;}
+.mng_list > li{width:100%; border-bottom:1px solid #e5e5e5; margin:0px; padding:0px;}
+.mng_list > li > dl{width:100%; overflow:hidden; text-align:left; margin:0px; padding:0px;}
+.mng_list > li > dl > dt{width:100%; position:relative; margin:0px; padding:0px;}
+.mng_list > li > dl > dd{margin:0px; padding:0px; overflow:hidden;}
+.mng_list > li > dl > dt .faq_ask,
+.mng_list > li > dl > dd .faq_answer{width:60px; font-family:Times New Roman; font-size:22px; font-weight:bold; text-align:center;}
+.mng_list > li > dl .faq_ask{color:#999;}
+.mng_list > li > dl .faq_answer{color:#990000;}
+.mng_list > li > dl > dt .faq_subject{padding:0 0 0 60px; overflow:hidden; position:relative; z-index:3;font-size:14px;}
+.mng_list > li > dl > dt .faq_subject a{display:block; padding:20px 50px 20px 0;}
+.mng_list > li > dl > dt .faq_subject a.faq_open{font-weight:bold; color:#333; cursor:pointer;}
+.mng_list > li > dl > dt .faq_subject a.faq_open span{font-weight:normal;}
+.mng_list > li > dl > dt .faq_subject a:focus,
+.mng_list > li > dl > dt .faq_subject a:active,
+.mng_list > li > dl > dt .faq_subject a:hover{color:#000;text-decoration:none;}
+.mng_list > li > dl > dt .faq_chk{position:absolute; left:60px; top:20px; text-align:center; width:60px;z-index:102;}
+.mng_list > li > dl > dt .faq_md{position:absolute; right:70px; top:15px; text-align:center; width:60px; z-index:101;}
+.mng_list > li > dl .faq_ask{position:absolute; left:0px; top:15px; text-align:center;}
+.mng_list > li > dl .faq_answer{position:absolute; left:0px; top:20px; text-align:center; width:60px;}
+.mng_list > li > dl > dd{width:100%; position:relative; background:#fafafa; display:none; border-top:1px dashed #e5e5e5;}
+.mng_list > li > dl > dd .faq_cont{padding:25px 25px 25px 70px; overflow:hidden; line-height: 1.4em;}
+.mng_list > li > dl > dd .faq_cont img{max-width:100%;}
+.mng_list > li > dl > dt .faq_sh{width:30px; height:30px; position:absolute; right:0px; top:50%;margin-top:-15px; z-index:1;}
+
+.mng_list > li > dl > dt .faq_sh i{display:block;width:100%;height:30px;line-height:30px;}
+.mng_list > li > dl > dt .faq_sh .fa-chevron-up{display:none;}
+.mng_list > li > dl > dt .faq_sh .fa-chevron-down{display:block; color:#999;}
+.mng_list > li > dl > dt .listnum{display:block; position:absolute; left:0px; top:-100px;}
+
+.mng_list > li.show dl .faq_ask{color:#000;}
+.mng_list > li.show dl dt .faq_subject a{color:#000;}
+.mng_list > li.show dl dt .faq_sh .fa-chevron-up{display:block;color:#990000;}
+.mng_list > li.show dl dt .faq_sh .fa-chevron-down{display:none;}
+.mng_list > li > dl > dd .btn_rb{float:right; margin:0 10px 10px 0;}
+
+ul{ margin: 0; padding: 0; list-style: none;}
+
+.mngNewBtn{
+    background: #666666;
+    color: #ffffff;
+    border: 1px solid #666666;
+    display: inline-block !important;
+    padding: 3px 5px;
+    font-size: 12px;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 5px;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+    height: auto;
+}
+
+.newdiv{
+	float: right;
+}
+
+@media all and (max-width: 800px)
+{
+
+	.mng_list > li > dl > dt .mng_ask,
+	.mng_list > li > dl > dd .mng_answer{width:30px;font-size:18px;}
+	.mng_list > li > dl .mng_ask{top:20px;}
+	.mng_list > li > dl > dt .mng_subject{padding:0 0 0 30px;}
+	.mng_list > li > dl > dt .mng_chk{left:30px;}
+	.mng_list > li > dl > dd .mng_cont{padding:15px 15px 15px 40px; overflow:hidden; line-height: 1.4em;}
+}

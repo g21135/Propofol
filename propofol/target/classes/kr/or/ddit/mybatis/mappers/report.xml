@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.report.dao.IReportDAO">
+	<insert id="insertReport" parameterType="ReportVO">
+		<selectKey order="BEFORE" resultType="int" keyProperty="report_num">
+			SELECT REPORT_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+			INSERT INTO REPORT (REPORT_NUM, REASON_NUM, MEM_ID_FROM, MEM_ID_TO, REPORT_CONTENT, REPORT_DATE, POST_NUM) 
+	    		VALUES (#{report_num}, #{reason_num}, #{mem_id_from}, #{mem_id_to}, #{report_content}, SYSDATE, #{post_num})
+	</insert>
+	
+	<select id="selectReportListCount" resultType="int" parameterType="PagingVO">
+			SELECT COUNT(*) 
+			    FROM REPORT
+	</select>
+	
+	<select id="selectReportList" resultType="ReportVO" parameterType="PagingVO">
+		SELECT B.*
+			FROM (
+				SELECT ROWNUM RNUM, A.*
+				FROM (
+					SELECT REPORT_NUM, REASON.REASON_CONTENT, MEM_ID_FROM, MEM_ID_TO, REPORT_CONTENT, TO_CHAR(REPORT_DATE, 'YYYY-MM-DD') REPORT_DATE, REPORT.POST_NUM, POST_NAME, POST_CONTENT
+					    FROM REPORT LEFT OUTER JOIN REASON ON (REPORT.REASON_NUM = REASON.REASON_NUM)
+					                LEFT OUTER JOIN POST ON (REPORT.POST_NUM = POST.POST_NUM)
+    					ORDER BY REPORT_NUM DESC
+				) A
+			) B
+       	WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectReport" resultType="ReportVO" parameterType="int">
+		SELECT *
+			FROM REPORT
+			WHERE REPORT_NUM = #{report_num}
+	</select>
+	
+	<delete id="deleteReport" parameterType="int">
+		DELETE FROM report
+			WHERE REPORT_NUM =#{report_num}
+	</delete>
+</mapper>

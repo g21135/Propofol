@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.alarm.dao.IAlarmDAO">
+
+	<select id="allCount" parameterType="String" resultType="long">
+		SELECT COUNT(*)
+		FROM NOTICE
+		WHERE MEM_ID = #{mem_id}				
+	</select>
+
+	<select id="selectAlarmList" parameterType="PagingVO" resultType="NoticeVO">
+		SELECT B.* 
+		FROM(
+			SELECT ROWNUM RNUM, A.*
+			FROM (
+				SELECT * FROM NOTICE
+				WHERE MEM_ID = #{mem_id}
+			)A
+			ORDER BY NOTICE_READ
+		)B
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="countRead" parameterType="String" resultType="Integer">
+		SELECT COUNT(NOTICE_READ)
+        FROM NOTICE
+        WHERE MEM_ID = #{mem_id}
+        AND NOTICE_READ = 'N'
+	</select>
+	
+	<insert id="insertNotice" parameterType="NoticeVO">
+		<selectKey order="BEFORE" resultType="int" keyProperty="notice_num">
+	      SELECT NOTICE_SEQ.NEXTVAL FROM DUAL
+	    </selectKey>
+		INSERT INTO NOTICE(
+			NOTICE_NUM,
+			MEM_ID,
+			NOTICE_CONTENT,
+			NOTICE_READ,
+			NOTICE_DATE,
+			NOTICE_URL
+		)VALUES(
+			#{notice_num},
+			#{mem_id},
+			#{notice_content},
+			'N',
+			SYSDATE,
+			#{notice_url}
+		)
+	</insert>
+	
+	<update id="updateNotice">
+		UPDATE NOTICE
+		SET
+			NOTICE_READ = 'Y'
+		WHERE NOTICE_NUM = #{notice_num} 
+	</update>
+	
+	<delete id="deleteNotice">
+		DELETE NOTICE
+		WHERE NOTICE_NUM = #{notice_num}
+	</delete>
+</mapper>

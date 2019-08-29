@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.customer.dao.ICustomerDAO">
+	<!-- 검색 -->
+	<sql id="searchFrag">
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
+			<choose>
+				<when test="searchType.equals('question')">
+					AND CUSTOMER_QUESTION LIKE '%'||#{searchWord}||'%'
+				</when>
+				<when test="searchType.equals('answer')">
+					AND CUSTOMER_ANSWER LIKE '%'||#{searchWord}||'%'
+				</when>
+				<when test="searchType.equals('member')">
+					AND MEM_ID LIKE '%'||#{searchWord}||'%'
+				</when>
+				<otherwise>
+					AND CUSTOMER_QUESTION LIKE '%'||#{searchWord}||'%'
+					OR CUSTOMER_ANSWER LIKE '%'||#{searchWord}||'%'
+				</otherwise>
+			</choose>
+		</if>
+	</sql>
+	
+	<!-- 비밀번호 있을 시 수정 -->
+	<sql id="passFrag">
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(customer_pass)">
+			#{customer_pass}
+		</if>
+		<if test="@org.apache.commons.lang3.StringUtils@isBlank(customer_pass)">
+			NULL
+		</if>
+	</sql>
+
+	<!-- 전체 수 조회 -->
+	<select id="selectCustomerListCount" resultType="int" parameterType="PagingVO">
+		SELECT COUNT(*) 
+			FROM CUSTOMER
+			WHERE BOARD_NUM=#{searchVO.board_num}
+			<include refid="searchFrag" />
+	</select>
+	
+	<!-- 리스트 조회 -->
+	<select id="selectCustomerList" resultType="CustomerVO" parameterType="PagingVO">
+		SELECT B.*
+			FROM (
+				SELECT ROWNUM RNUM, A.*
+				FROM (
+					SELECT CUSTOMER_NUM, MEM_ID, CUSTOMER_READ, CUSTOMER_QUESTION, CUSTOMER_PASS, TO_CHAR(CUSTOMER_DATE, 'YYYY-MM-DD') CUSTOMER_DATE, CUSTOMER_ANSWER, CUSTOMER_CHECK
+					FROM CUSTOMER
+					WHERE BOARD_NUM=#{searchVO.board_num} 
+					<include refid="searchFrag" />
+					ORDER BY CUSTOMER_NUM DESC
+				) A
+			) B
+       	WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<resultMap type="CustomerVO" id="customerMap" autoMapping="true">
+		<id property="customer_num" column="CUSTOMERNUM"/>
+		<collection property="attachList" ofType="AttachVO" autoMapping="true">
+		</collection>
+	</resultMap>
+	
+	<!-- 상세 조회 -->
+	<select id="selectCustomer" parameterType="int" resultMap="customerMap">
+		SELECT A.CUSTOMER_NUM CUSTOMERNUM, A.MEM_ID, BOARD_NUM, CUSTOMER_QUESTION, CUSTOMER_CONTENT, CUSTOMER_DATE, CUSTOMER_PASS,
+			   CUSTOMER_ANSWER, CUSTOMER_ANSWER_DATE, CUSTOMER_CHECK,
+			   ATTACH_NUM, ATT_NAME, ATT_SAVENAME, ATT_MIME, ATT_SIZE, ATT_FANCYSIZE, ATT_DOWNLOAD
+		    FROM CUSTOMER A LEFT OUTER JOIN ATTACH B ON (A.CUSTOMER_NUM = B.CUSTOMER_NUM)
+		    WHERE A.CUSTOMER_NUM = #{customer_num}
+	</select>
+	
+	<!-- 삭제 -->
+	<delete id="deleteCustomer" statementType="CALLABLE">
+		{ CALL #{rowcnt,mode=OUT,jdbcType=INTEGER} := DELETECUSTOMERFUNC(#{customer_num,mode=IN}) }
+	</delete>
+	
+	<!-- 자주 묻는 질문 작성 -->
+	<insert id="insertFaq" parameterType="CustomerVO">
+		<selectKey order="BEFORE" resultType="int" keyProperty="customer_num">
+			SELECT CUSTOMER_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO CUSTOMER (CUSTOMER_NUM, MEM_ID, BOARD_NUM, CUSTOMER_QUESTION, CUSTOMER_DATE, CUSTOMER_ANSWER)
+	    	VALUES (#{customer_num}, #{mem_id}, #{board_num}, #{customer_question}, SYSDATE, #{customer_answer})
+	</insert>
+	
+	<!-- 질문 작성 -->
+	<insert id="insertQuestion" parameterType="CustomerVO">
+		<selectKey order="BEFORE" resultType="int" keyProperty="customer_num">
+			SELECT CUSTOMER_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO CUSTOMER (CUSTOMER_NUM, MEM_ID, BOARD_NUM, CUSTOMER_QUESTION, CUSTOMER_CONTENT, CUSTOMER_DATE, CUSTOMER_PASS, CUSTOMER_READ)
+	    	VALUES (#{customer_num}, #{mem_id}, #{board_num}, #{customer_question}, #{customer_content}, SYSDATE, <include refid="passFrag" />, 'N')
+	</insert>
+	
+	<!-- 건의사항 작성 -->
+	<insert id="insertSuggest" parameterType="CustomerVO">
+		<selectKey order="BEFORE" resultType="int" keyProperty="customer_num">
+			SELECT CUSTOMER_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO CUSTOMER (CUSTOMER_NUM, MEM_ID, BOARD_NUM, CUSTOMER_QUESTION, CUSTOMER_CONTENT, CUSTOMER_DATE, CUSTOMER_READ)
+	    	VALUES (#{customer_num}, #{mem_id}, #{board_num}, #{customer_question}, #{customer_content}, SYSDATE, 'N')
+	</insert>
+
+	<!-- 자주 묻는 질문 수정 -->
+	<update id="updateFaq" parameterType="CustomerVO">
+		UPDATE CUSTOMER
+		    SET
+		    CUSTOMER_QUESTION = #{customer_question},
+		    CUSTOMER_ANSWER = #{customer_answer},
+		    CUSTOMER_DATE = SYSDATE
+		    WHERE CUSTOMER_NUM = #{customer_num}
+	</update>
+	
+	<!-- 질문 수정 -->
+	<update id="updateQuestion" parameterType="CustomerVO">
+		UPDATE CUSTOMER
+		    SET
+		    CUSTOMER_QUESTION = #{customer_question},
+		    CUSTOMER_CONTENT = #{customer_content},
+		    CUSTOMER_DATE = SYSDATE,
+		    CUSTOMER_PASS = <include refid="passFrag" />
+		    WHERE CUSTOMER_NUM = #{customer_num}
+	</update>
+	
+	<!-- 건의사항 수정-->
+	<update id="updateSuggest" parameterType="CustomerVO">
+		UPDATE CUSTOMER
+		    SET
+		     CUSTOMER_QUESTION = #{customer_question},
+		    CUSTOMER_CONTENT = #{customer_content},
+		    CUSTOMER_DATE = SYSDATE
+		    WHERE CUSTOMER_NUM = #{customer_num}
+	</update>
+
+	<!-- 답변 작성 -->
+	<update id="updateAnswer" parameterType="CustomerVO">
+		UPDATE CUSTOMER
+		    SET
+		    CUSTOMER_ANSWER = #{customer_answer},
+		    CUSTOMER_ANSWER_DATE = SYSDATE,
+		    CUSTOMER_READ = 'Y'
+		    WHERE CUSTOMER_NUM = #{customer_num}
+	</update>
+	
+	<!-- 진행상황 수정 -->
+	<update id="updateIng" parameterType="CustomerVO">
+		UPDATE CUSTOMER
+		    SET
+		    CUSTOMER_CHECK = #{customer_check}
+		    WHERE CUSTOMER_NUM = #{customer_num}
+	</update>
+</mapper>

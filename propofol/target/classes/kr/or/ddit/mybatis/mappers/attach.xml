@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.attach.dao.IAttachDAO">
+	<!-- 비밀번호 있을 시 수정 -->
+	<sql id="customer_num">
+		<if test="customer_num != null">
+			#{customer_num}
+		</if>
+		<if test="customer_num == null">
+			NULL
+		</if>
+	</sql>
+	<sql id="post_num">
+		<if test="post_num != null">
+			#{post_num}
+		</if>
+		<if test="post_num == null">
+			NULL
+		</if>
+	</sql>
+
+	<insert id="insertAttach" parameterType="AttachVO">
+		INSERT INTO ATTACH (ATTACH_NUM, MEM_ID, ATT_NAME, ATT_SAVENAME, ATT_MIME, ATT_SIZE, CUSTOMER_NUM, POST_NUM, ATT_FANCYSIZE, ATT_DOWNLOAD) 
+			SELECT NVL(MAX(ATTACH_NUM), 0) +1 , #{mem_id}, #{att_name}, #{att_savename}, #{att_mime}, 
+					   #{att_size},<include refid="customer_num" />, <include refid="post_num" />, #{att_fancysize}, 0
+		 FROM ATTACH
+	</insert>
+	
+	<select id="selectAttach" resultType="AttachVO" parameterType="int">
+		SELECT *
+			FROM ATTACH
+			WHERE ATTACH_NUM = #{attach_num}
+	</select>
+	
+	<update id="incrementDownload" parameterType="int">
+		UPDATE ATTACH
+			SET
+			ATT_DOWNLOAD = ATT_DOWNLOAD + 1
+			WHERE ATTACH_NUM = #{attach_num}
+	</update>
+	
+	<delete id="deleteAttach" parameterType="int">
+		DELETE 
+			FROM ATTACH 
+			WHERE ATTACH_NUM = #{attach_num}
+	</delete>
+</mapper>

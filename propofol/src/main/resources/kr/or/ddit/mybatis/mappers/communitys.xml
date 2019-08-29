@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.community.dao.ICommunitysDAO">
+
+<select id="selectFirstAreaList" resultType="FirstAreaVO">
+	SELECT FAR_CODE , FAR_NAME
+	FROM FR_AREA
+</select>
+
+<select id="selectOccupationList" resultType="OccupationVO">
+
+	SELECT OC_CODE , OC_NAME
+	FROM OCCUPATION
+</select>
+
+<select id="selectIndustryList" resultType="IndustryVO" >
+
+	SELECT IN_CODE , IN_NAME, OC_CODE
+	FROM INDUSTRY
+</select>
+
+<select id="selectSecondAreaList" resultType="SecondAreaVO">
+	SELECT SAR_CODE , SAR_NAME , FAR_CODE
+	FROM SE_AREA
+</select>
+
+<select id="selectAcademicList" resultType="AcademicVO">
+	SELECT AC_CODE , AC_NAME
+	FROM ACADEMIC
+</select>
+
+<select id="selectServiceTypeList" resultType="ServiceTypeVO">
+	SELECT ST_CODE , ST_NAME
+	FROM SERVICETYPE
+</select>
+
+<select id="selectdayList" resultType="DayVO">
+	<![CDATA[
+	SELECT TO_CHAR(SYSDATE - (LEVEL - 1), 'YYYY-MM-DD') AS day FROM DUAL CONNECT BY LEVEL <= 7  ]]>
+</select>
+</mapper>

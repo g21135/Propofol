@@ -1,0 +1,153 @@
+@charset "UTF-8";
+
+#pageView {
+	float: left;
+}
+
+#pageView .pageContent {
+	width: 125px;
+	height: 200px;
+	float: left;
+	padding: 15px;
+	margin-top: 15px;
+	font-weight: bold;
+	border-right: solid 2px #E6E6E6;
+	background: #f5f5f8;
+}
+
+#pageView .makePage {
+	height: 130px;
+	width: 100%;
+	cursor: pointer;
+}
+
+#pageView .makePage:hover {
+	height: 130px;
+	width: 100%;
+	cursor: pointer;
+	box-shadow: 1px 1px 4px gray;
+}
+
+.menuEdit {
+	float: left;
+	color: gray;
+	margin-left: 7px;
+	margin-top: 5px;
+}
+
+.menuEdit:hover {
+	color: black;
+	cursor: pointer;
+}
+
+#addPage img {
+	height: 130px;
+	width: 100%;
+	cursor: pointer;
+}
+
+#addPage {
+	float: left;
+	margin-top: 44px;
+	margin-left: 15px;
+}
+
+#addPage:hover {
+	box-shadow: 1px 0px 5px 0px gray;
+}
+
+.itemHighlight {
+	width: 3px;
+	height: 225px;
+	float: left;
+	border: solid 3px cornflowerblue;
+	background: cornflowerblue;
+}
+
+.bubble {
+	z-index: 100;
+	position: absolute;
+	height: auto;
+	padding: 10px 10px 10px 10px;
+	background: #FFFFFF;
+	border-radius: 5px;
+	border: solid 1px #E6E6E6;
+	position: absolute;
+	font-size: 16px;
+	text-align: left;
+}
+
+.bubble:after {
+	content: '';
+	position: absolute;
+	border-style: solid;
+	border-width: 0 16px 20px 17.5px;
+	border-color: #FFFFFF transparent;
+	display: block;
+	width: 0;
+	z-index: 1;
+	top: -18.5px;
+	left: 18px;
+}
+
+.bubble:before {
+	content: '';
+	position: absolute;
+	border-style: solid;
+	border-width: 0 16px 20px 17.5px;
+	border-color: #E6E6E6 transparent;
+	display: block;
+	width: 0;
+	z-index: 0;
+	top: -20px;
+	left: 18px;
+}
+
+.pageCopy, .pageDelete {
+	display: block;
+	padding: 5px;
+	cursor: pointer;
+	color: black;
+}
+
+.pageCopy:hover, .pageDelete:hover {
+	color: gray;
+}
+
+.input-name {
+	float: left;
+	font-size: 14px;
+	width: 70%;
+	position: relative;
+	display: inline-block;
+	overflow: hidden;
+}
+
+.input-name>input[type=text] {
+	width: 100%;
+	border: none;
+	border-bottom: 2px solid #e6e6e6;
+	outline: none;
+	background: #f5f5f8;
+	margin-bottom: 10px;
+}
+
+.underline-animation {
+	transition: all 0.5s;
+	display: inline-block;
+	bottom: 10px;
+	left: -100%;
+	position: absolute;
+	width: 100%;
+	height: 2px;
+	background-color: #808080;
+}
+
+.input-name>input[type=text]:focus+.underline-animation {
+	left: 0;
+}
+
+.basicContent {
+	margin: 20px;
+	width: 460px;
+}

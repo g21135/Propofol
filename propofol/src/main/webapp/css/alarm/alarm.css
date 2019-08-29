@@ -1,0 +1,35 @@
+@charset "UTF-8";
+
+.alarm_div_N {
+	width : 100%;
+	border-bottom: 1px solid lightblue;
+	background : #eef2fe;
+}
+.alarm_div_Y {
+	width : 100%;
+	border-bottom: 1px solid lightblue;
+	background : white;
+}
+
+.alarm_div_Y:hover, .alarm_div_N:hover{
+	background : lightgray;
+}
+span.alarm_aTag{
+	margin-left : 50px;
+	width : 160px;
+	cursor: pointer;
+	display : inline-block;
+	font-size: 1.2em;
+}
+.alarm_read_span{
+	display: block;
+	text-align: right;
+	font-style: italic;
+}
+.fa-window-close{
+	margin-top: 3px;
+	float: right;
+	font-size: 1.3em;
+	color: red;
+	cursor: pointer;
+}

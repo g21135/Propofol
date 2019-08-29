@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+<!-- appender : 로그 메시지 기록 위치 (console, file, database) / 가장 많이 쓴다  -->
+<!-- layout : 로그메시지 형식 (patternLayout) -->
+<!-- level : 로깅 이벤트 등급(debug < info(정상실행) < trace(정상실행 돌아가는건 확인) < warn (경고)< error < fatal(심각한 상황))  -->
+<!-- Logger : 실제 로깅 명령을 프레임 워크에 전달하는 자  -->
+
+	<Appenders>
+		<!-- log 메시지 기로  위치 -->
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{1.} - %msg%n" />
+			<!-- 메시지 형식 -->
+		</Console>
+	</Appenders>
+	<Loggers>
+		<Logger name="kr.or.ddit" level="info" additivity="false">
+<!-- 		kr.or.ddit패키지이하 모든 로거들은 이 레벨로 설정 한다 -->
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="org.springframework.web" level="info" additivity="false">
+<!-- 		kr.or.ddit패키지이하 모든 로거들은 이 레벨로 설정 한다 -->
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="jdbc.sqltiming" level="debug" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="jdbc.resultsettable" level="debug" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+		<Logger name="org.springframework.test" level="debug" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+<!-- 		<Logger name="java.sql.Connection" level="debug" additivity="false"> -->
+<!-- 			<AppenderRef ref="Console" /> -->
+<!-- 		</Logger> -->
+<!-- 		<Logger name="java.sql.PreparedStatement" level="debug" additivity="false"> -->
+<!-- 			<AppenderRef ref="Console" /> -->
+<!-- 		</Logger> -->
+		
+<!-- 	위에서 못찾으면  -->
+		<Root level="error">
+			<AppenderRef ref="Console" />
+		</Root>
+	</Loggers>
+</Configuration>
