@@ -5,23 +5,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.ddit.attach.dao.IAttachDAO;
 import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.exception.CommonException;
 import kr.or.ddit.post.dao.IPostDAO;
 import kr.or.ddit.vo.AttachVO;
+import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.PagingVO;
 import kr.or.ddit.vo.PostVO;
 
 @Service
 public class PostServiceImpl implements IPostService {
+	@Inject
+	WebApplicationContext container;
 	@Inject
 	IPostDAO dao;
 	@Inject
@@ -61,6 +67,34 @@ public class PostServiceImpl implements IPostService {
 		}
 	}
 	
+	@Value("#{appInfo.postImages}")
+	String saveFolderUrl;
+	
+	File ImgsaveFolder = null;
+	
+	@PostConstruct 
+	public void init() {
+		String fileSystemPath = container.getServletContext().getRealPath(saveFolderUrl);
+		ImgsaveFolder = new File(fileSystemPath);
+		if(!ImgsaveFolder.exists()) ImgsaveFolder.mkdirs();
+	}
+	
+	private void processImage(PostVO post) {
+		MultipartFile image = post.getPost_img();
+		if(image == null) {
+			return;
+		}
+		PostVO postVO = dao.selectPost(post.getPost_num());
+		String img = postVO.getPost_image();
+		FileUtils.deleteQuietly(new File(ImgsaveFolder, img));
+		File saveFile = new File(ImgsaveFolder,postVO.getPost_image());
+		try(InputStream is = image.getInputStream();) {
+			FileUtils.copyInputStreamToFile(is, saveFile);
+		}catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	/**
 	 * 게시글 전체 수 조회
 	 */
@@ -97,11 +131,12 @@ public class PostServiceImpl implements IPostService {
 		int cnt = dao.insertPost(post);
 		if (cnt > 0) {
 			processFiles(post);
+			processImage(post);
 			result = ServiceResult.OK;
 		} 
 		return result;
 	}
-
+	
 	/**
 	 * 공지사항 수정
 	 */
@@ -112,6 +147,7 @@ public class PostServiceImpl implements IPostService {
 		int cnt = dao.updatePost(post);
 		if (cnt > 0) {
 			processFiles(post);
+			processImage(post);
 			result = ServiceResult.OK;
 		} 
 		return result;

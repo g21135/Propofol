@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.Pay.dao.IPayDAO">
+
+<update id="UpdateMemberShip" parameterType="MemberVO">
+
+	UPDATE MEMBER 
+	SET 
+	MEM_MEMBERSHIP = #{mem_membership}, 
+	START_MEMSHIP = SYSDATE, 
+	END_MEMSHIP = TO_DATE(SYSDATE)+#{mem_membership}
+	WHERE MEM_ID = #{mem_id}
+
+</update>
+
+<update id="updateEndDay" parameterType="MemberVO">
+
+	UPDATE MEMBER 
+	SET MEM_MEMBERSHIP = 0,
+	START_MEMSHIP = NULL,
+	END_MEMSHIP = NULL
+	WHERE MEM_ID = #{mem_id}
+	<![CDATA[
+	AND round((SELECT END_MEMSHIP FROM MEMBER WHERE MEM_ID = #{mem_id} ) - TO_DATE(SYSDATE)) -1 < 0 
+	]]>
+</update>
+
+<insert id="insertOrderList" parameterType="OrderTbVO">
+
+INSERT INTO ORDER_TB
+VALUES((SELECT NVL(MAX(ORDER_NUM),1)+1 FROM ORDER_TB),#{mem_id},#{order_type},SYSDATE,TO_DATE(SYSDATE)+(SELECT MEM_MEMBERSHIP FROM MEMBER WHERE MEM_ID = #{mem_id}),SYSDATE,#{order_cost},'카카오페이','일시불','Y','root')
+</insert>
+</mapper>

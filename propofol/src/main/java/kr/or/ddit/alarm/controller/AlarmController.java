@@ -19,7 +19,6 @@ import kr.or.ddit.alarm.dao.IAlarmDAO;
 import kr.or.ddit.alarm.service.IAlarmService;
 import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.vo.NoticeVO;
-import kr.or.ddit.vo.PagingVO;
 
 @Controller
 @RequestMapping(value = "/alarm", produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -32,21 +31,11 @@ public class AlarmController {
 	
 	@GetMapping
 	@ResponseBody
-	public Map<String, Object> alarmList(@RequestParam(name="mem_id", required=true) String mem_id,
-			@RequestParam(name="page", required=false, defaultValue="1") int currentValue){
+	public Map<String, Object> alarmList(@RequestParam(name="mem_id", required=true) String mem_id){
 		Map<String, Object> result = new LinkedHashMap<>();
-		PagingVO<NoticeVO> pagingVO = new PagingVO<>(5, 3);
-		pagingVO.setCurrentPage(currentValue);
-		pagingVO.setMem_id(mem_id);
-		
-		long totalRecord = dao.allCount(mem_id);
-		pagingVO.setTotalRecord(totalRecord);
-		
 		int count = dao.countRead(mem_id); 
-
-		List<NoticeVO> list = service.retreieveAlarm(pagingVO);
-		pagingVO.setDataList(list);
-		result.put("alarmList", pagingVO);
+		List<NoticeVO> list = service.retreieveAlarm(mem_id);
+		result.put("alarmList", list);
 		result.put("readCount", count);
 		return result;
 	}

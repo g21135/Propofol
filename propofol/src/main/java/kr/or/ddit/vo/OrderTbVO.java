@@ -17,6 +17,8 @@ public class OrderTbVO {
 	private String order_means;
 	private String order_pay;
 	private String admin_id;
+	private String port_name;
+	private Integer port_num;
 	
 	private List<OrderFormVO> orderFormList;
 }

@@ -31,7 +31,7 @@ public class PagingVO<T> implements Serializable {
 	private long endPage; // 페이지 블럭에서 마지막 페이지
 
 	private List<T> dataList;// 제네릭, 타입변수
-	private List<T> dataList2;// 제네릭, 타입변수
+	private List<PortLikeVO> dataList2;// 제네릭, 타입변수
 
 	private String searchType;
 	private String searchWord;
@@ -83,6 +83,9 @@ public class PagingVO<T> implements Serializable {
 
 	public void setDataList(List<T> dataList) {
 		this.dataList = dataList;
+	}
+	public void setDataList2(List<PortLikeVO> dataList2) {
+		this.dataList2 = dataList2;
 	}
 
 	String pattern = "<a href='#' onclick='%s(%d)'>[%s]</a>";

@@ -63,8 +63,8 @@ public class LoginController{
 			try {
 				MemberVO member = new MemberVO(mem_id, mem_pass);
 				Object result = service.authenticate(member);
-				
 				if(result instanceof MemberVO){
+					
 					if(StringUtils.isNotBlank(saveSession)) {//값이 있다
 						if("check".equals(saveSession)) {//check다
 							session.setAttribute("authMember", (MemberVO)result);
@@ -77,7 +77,7 @@ public class LoginController{
 							cookie.setMaxAge(count);
 							//쿠키 적용
 							resp.addCookie(cookie);
-							
+							//로그인 상태 유지 시간
 							Date sessionLimit = new Date(System.currentTimeMillis() + (1000 * count));
 							member.setSession_id(session.getId());
 							member.setSession_limite(sessionLimit);
@@ -94,7 +94,7 @@ public class LoginController{
 						resultMap.put("failedId", mem_id); 
 						resultMap.put("msg","비밀번호 오류"); 
 					}else if(ServiceResult.NOTAVAILABLE.equals(result)){
-						resultMap.put("msg","탈퇴 처리된 아이디입니다."); 
+				 		resultMap.put("msg","탈퇴 처리된 아이디입니다."); 
 					}else {
 						resultMap.put("msg", "블랙리스트 처리된 회원입니다. 자세한 사항은 문의게시판에 문의해주세요.");
 					}

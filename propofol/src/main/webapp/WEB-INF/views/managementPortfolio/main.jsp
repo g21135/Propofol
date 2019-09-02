@@ -52,6 +52,7 @@
   	<tiles:insertAttribute name="content"/>
 	</div>
 	<div id="footMenu">
+  	<tiles:insertAttribute name="footer"/>
 	</div>
 	<!-- Template Main Javascript File -->
 	<script src="${cPath}/js/main.js"></script>

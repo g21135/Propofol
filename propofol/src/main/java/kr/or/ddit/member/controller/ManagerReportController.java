@@ -54,7 +54,7 @@ public class ManagerReportController {
 	}
 	
 	@GetMapping("{mem_id}")
-	public String process(@RequestParam(name="page", required=false, defaultValue="1")int currentPage, Model model) throws NoSuchAlgorithmException {
+	public String process(@RequestParam(name="page", required=false, defaultValue="1")int currentPage, Model model){
 		PagingVO<ReportVO> pagingVO = new PagingVO<>(5, 3);
 		pagingVO.setCurrentPage(currentPage);
 		pagingVO.setTotalRecord(reportService.retrieveReportCount(pagingVO));

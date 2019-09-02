@@ -9,7 +9,7 @@
 
 
 <article id="ctt" class="ctt_map">
-<div id="map" style="width:80%;height:350px;"></div>
+<div id="mapIntro" style="width:80%;height:350px;"></div>
 
 <div style="padding-top: 15px;">
 <h3 class="h3_title">Propofol 오시는 길</h3>
@@ -25,10 +25,9 @@
 </div>
 </article>
 </div>
-
     </div>
 <script>
-	var mapContainer = document.getElementById('map'), // 지도의 중심좌표
+	var mapContainer = document.getElementById('mapIntro'), // 지도의 중심좌표
 	mapOption = {
 		center : new kakao.maps.LatLng(36.324848,127.419948), // 지도의 중심좌표
 		level : 3

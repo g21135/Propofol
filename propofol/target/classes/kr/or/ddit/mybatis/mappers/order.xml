@@ -58,6 +58,28 @@
 			    <include refid="manageMentFrag" />
 	</select>
 	
+	<select id="selectTypeOrderList" parameterType="OrderTbVO" resultType="OrderTbVO">
+		 SELECT SUM(ORDER_COST) ORDER_COST, ORDER_TYPE ORDER_DATE
+		    FROM ORDER_TB
+		    GROUP BY ORDER_TYPE
+	</select>
+	
+	<select id="selectMonthOrderList" parameterType="OrderTbVO" resultType="OrderTbVO">
+		 SELECT SUM(ORDER_COST) ORDER_COST, TO_CHAR(ORDER_DATE, 'YYYY-MM-DD') ORDER_DATE
+		    FROM ORDER_TB
+		    WHERE ORDER_DATE <![CDATA[ >= ]]> TO_DATE(#{order_date}||'-01', 'YYYY-MM-DD') AND ORDER_DATE <![CDATA[ < ]]> TO_DATE(#{order_date}||'-30', 'YYYY-MM-DD')
+		    GROUP BY TO_CHAR(ORDER_DATE, 'YYYY-MM-DD')
+	    	ORDER BY ORDER_DATE
+	</select>
+	
+	<select id="selectManagerOrderList" parameterType="OrderTbVO" resultType="OrderTbVO">
+		 SELECT SUM(ORDER_COST) ORDER_COST, TO_CHAR(ORDER_DATE, 'YYYY-MM') ORDER_DATE
+		    FROM ORDER_TB
+		    WHERE ORDER_DATE <![CDATA[ >= ]]> '2019-01-01' AND ORDER_DATE <![CDATA[ < ]]> '2019-12-31'
+		    GROUP BY TO_CHAR(ORDER_DATE, 'YYYY-MM')
+		    ORDER BY ORDER_DATE
+	</select>
+	
 	<resultMap type="OrderTbVO" id="orderMap" autoMapping="true">
 		<id property="order_num" column="ORDER_NUM"/>
 		<collection property="orderFormList" javaType="java.util.List" ofType="OrderFormVO" autoMapping="true"> <!-- 1:N Has Many -->
@@ -70,15 +92,13 @@
 			FROM (
 				SELECT ROWNUM RNUM, A.*
 				FROM (
-					SELECT 	C.ORDER_NUM,    MEM_ID,    ORDER_TYPE,
+					SELECT 	C.ORDER_NUM,    C.MEM_ID,    ORDER_TYPE,
 							    TO_CHAR(ORDER_START_DATE, 'YYYY-MM-DD') ORDER_START_DATE,    
 							    TO_CHAR(ORDER_END_DATE, 'YYYY-MM-DD') ORDER_END_DATE,    
 							    TO_CHAR(ORDER_DATE, 'YYYY-MM-DD') ORDER_DATE,
 							    ORDER_COST,    ORDER_WAY,    ORDER_MEANS,
-							    ORDER_PAY, ADMIN_ID,
-							    FORM_NUM,		FORM_NAME,		FORM_TEL,		FORM_MAIL,
-								FORM_ASK,	FORM_ADDR,		FORM_FACEBOOK,		FORM_INSTA
-					FROM ORDER_TB C LEFT OUTER JOIN ORDER_FORM D ON (C.ORDER_NUM = D.ORDER_NUM)
+							    ORDER_PAY, ADMIN_ID, P.PORT_NAME, P.PORT_NUM
+					FROM ORDER_TB C LEFT JOIN PORTFOLIO P ON(C.ORDER_NUM = P.ORDER_NUM)
 					WHERE 1=1
 					<include refid="searchFrag" />
 					<include refid="manageMentFrag" />
@@ -89,16 +109,14 @@
 	</select>
 	
 	<select id="selectOrder" parameterType="int" resultType="OrderTbVO">
-		SELECT 	ORDER_NUM,    MEM_ID,    ORDER_TYPE,
+		SELECT 	A.ORDER_NUM,   A.MEM_ID,    ORDER_TYPE,
 				    TO_CHAR(ORDER_START_DATE, 'YYYY-MM-DD') ORDER_START_DATE,    
 				    TO_CHAR(ORDER_END_DATE, 'YYYY-MM-DD') ORDER_END_DATE,    
 				    TO_CHAR(ORDER_DATE, 'YYYY-MM-DD') ORDER_DATE,
 				    ORDER_COST,    ORDER_WAY,    ORDER_MEANS,
-				    ORDER_PAY, ADMIN_ID,
-				    FORM_NUM,		FORM_NAME,		FORM_TEL,		FORM_MAIL,
-					FORM_ASK,	FORM_ADDR,		FORM_FACEBOOK,		FORM_INSTA
-		  FROM ORDER_TB A LEFT OUTER JOIN ORDER_FORM B ON (A.ORDER_NUM = B.ORDER_NUM)
-		WHERE ORDER_NUM = #{order_num}
+				    ORDER_PAY, ADMIN_ID, P.PORT_NAME, P.PORT_NUM
+		  FROM ORDER_TB A LEFT JOIN PORTFOLIO P ON(A.ORDER_NUM = P.ORDER_NUM)
+		WHERE A.ORDER_NUM = #{order_num}
 	</select>
 	
 	<update id="choiceOrder" parameterType="OrderTbVO">
@@ -114,4 +132,57 @@
 		WHERE ORDER_NUM = #{order_num}
 	</update>
 	
+	<insert id="insertOrder">
+		<selectKey order="BEFORE" resultType="int" keyProperty="order_num">
+	      SELECT ORDERSEQ.NEXTVAL FROM DUAL
+	   </selectKey>
+		INSERT INTO ORDER_TB (
+		    ORDER_NUM,
+		    MEM_ID,
+		    ORDER_TYPE,
+		    ORDER_DATE
+		    <if test="order_start_date != null">
+		    ,ORDER_START_DATE
+		    </if>
+		    <if test="order_end_date != null">
+		    ,ORDER_END_DATE
+		    </if>
+		    <if test="order_cost != null">
+		    ,ORDER_COST
+		    </if>
+		    <if test="order_way != null">
+		    ,ORDER_WAY
+		    </if>
+		    <if test="order_means != null">
+		    ,ORDER_MEANS
+		    </if>
+		    <if test="order_pay != null">
+		    ,ORDER_PAY
+		    </if>
+		) VALUES (
+		   	#{order_num},
+		    #{mem_id},
+		    #{order_type},
+		    SYSDATE
+		    <if test="order_start_date != null">
+		    #{order_start_date},
+		    </if>
+		    <if test="order_end_date != null">
+		    ,#{order_end_date}
+		    </if>
+		    <if test="order_cost != null">
+		    ,#{order_cost}
+		    </if>
+		    <if test="order_way != null">
+		    ,#{order_way}
+		    </if>
+		    <if test="order_means != null">
+		    ,#{order_means}
+		    </if>
+		    <if test="order_pay != null">
+		    ,#{order_pay}
+		    </if>
+		)
+			
+	</insert>
 </mapper>

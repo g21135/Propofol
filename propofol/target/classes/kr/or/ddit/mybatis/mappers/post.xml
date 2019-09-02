@@ -19,18 +19,18 @@
 				</otherwise>
 			</choose>
 		</if>
-		<choose>
-			<when test="searchType eq 'notice'">
-				AND POST_TYPE = 1
-			</when>
-			<when test="searchType eq 'error'">
-				AND POST_TYPE = 2
-			</when>
-			<when test="searchType eq 'improvement'">
-				AND POST_TYPE = 3
-			</when>
-		</choose>
 	</sql>
+<!-- 		<choose> -->
+<!-- 			<when test="searchType eq 'notice'"> -->
+<!-- 				AND POST_TYPE = 1 -->
+<!-- 			</when> -->
+<!-- 			<when test="searchType eq 'error'"> -->
+<!-- 				AND POST_TYPE = 2 -->
+<!-- 			</when> -->
+<!-- 			<when test="searchType eq 'improvement'"> -->
+<!-- 				AND POST_TYPE = 3 -->
+<!-- 			</when> -->
+<!-- 		</choose> -->
 	
 	<sql id="post_parent">
 		<if test="post_parent != null">
@@ -46,6 +46,15 @@
 			#{post_type}
 		</if>
 		<if test="post_type == null">
+			NULL
+		</if>
+	</sql>
+	
+	<sql id="post_image">
+		<if test="post_image != null">
+			#{post_image, jdbcType=VARCHAR}
+		</if>
+		<if test="post_image == null">
 			NULL
 		</if>
 	</sql>
@@ -65,7 +74,7 @@
 				        SELECT POST.POST_NUM, 
 				               LPAD(' ', 2*(LEVEL-1))|| POST_NAME POST_NAME, 
 				               LEVEL POST_DEPTH,
-						       MEM_ID, TYPE_NAME, TO_CHAR(POST_DATE, 'YYYY-MM-DD') POST_DATE, POST_HIT, POST_PASS, BOARD_NUM, REPLY_CNT, POST_REPORT
+						       MEM_ID, TYPE_NAME, TO_CHAR(POST_DATE, 'YYYY-MM-DD') POST_DATE, POST_CONTENT, POST_HIT, POST_PASS, BOARD_NUM, REPLY_CNT, POST_REPORT, POST_IMAGE
 						FROM POST  LEFT OUTER JOIN TYPE ON (POST.POST_TYPE = TYPE.TPYE_NUM)
 	                               LEFT OUTER JOIN (SELECT COUNT(REPLY_NUM) REPLY_CNT, POST_NUM
 	                                                 FROM REPLY
@@ -88,7 +97,7 @@
 	</resultMap>
 	
 	<select id="selectPost" parameterType="int" resultMap="postMap">
-		SELECT A.POST_NUM POSTNUM, A.MEM_ID MEM_ID, POST_PARENT, POST_HIT, POST_NAME, POST_CONTENT, POST_DATE, TYPE_NAME, POST_TYPE,
+		SELECT A.POST_NUM POSTNUM, A.MEM_ID MEM_ID, POST_PARENT, POST_HIT, POST_NAME, POST_CONTENT, POST_DATE, TYPE_NAME, POST_TYPE, POST_IMAGE,
 	      		ATTACH_NUM, ATT_NAME, ATT_SAVENAME, ATT_MIME, ATT_SIZE, ATT_FANCYSIZE, ATT_DOWNLOAD
 		   FROM POST A LEFT OUTER JOIN TYPE B ON (A.POST_TYPE = B.TPYE_NUM) 
 		               LEFT OUTER JOIN ATTACH C ON (A.POST_NUM = C.POST_NUM)
@@ -111,8 +120,8 @@
 		<selectKey order="BEFORE" resultType="int" keyProperty="post_num">
 			SELECT POST_SEQ.NEXTVAL FROM DUAL
 		</selectKey>
-		INSERT INTO POST (POST_NUM, POST_PARENT, BOARD_NUM, MEM_ID, POST_TYPE, POST_NAME, POST_CONTENT, POST_HIT, POST_DATE) 
-    		VALUES (#{post_num}, <include refid="post_parent" />, #{board_num}, #{mem_id}, <include refid="post_type" />, #{post_name}, #{post_content}, 0, SYSDATE)
+		INSERT INTO POST (POST_NUM, POST_PARENT, BOARD_NUM, MEM_ID, POST_TYPE, POST_NAME, POST_CONTENT, POST_HIT, POST_IMAGE, POST_DATE) 
+    		VALUES (#{post_num}, <include refid="post_parent" />, #{board_num}, #{mem_id}, <include refid="post_type" />, #{post_name}, #{post_content}, 0, <include refid="post_image" />, SYSDATE)
 	</insert>
 	
 	<update id="updatePost" parameterType="PostVO">
@@ -121,6 +130,7 @@
 		    POST_TYPE = <include refid="post_type" />,
 		    POST_NAME = #{post_name},
 		    POST_CONTENT = #{post_content},
+		    POST_IMAGE = <include refid="post_image" />,
 		    POST_DATE = SYSDATE
 		    WHERE POST_NUM = #{post_num}
 	</update>

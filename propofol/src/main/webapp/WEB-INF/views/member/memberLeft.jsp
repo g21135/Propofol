@@ -23,9 +23,9 @@
 				<i class="fa fa-angle-down"></i>
 				<u class="fa fa-angle-up"></u>
 			</em>
-		<ul class="pf_snb2dul">
 			<c:choose>
 				<c:when test="${sessionScope.authMember.gr_num ne 3 }">
+				<ul class="pf_snb2dul">
 					<c:forEach items="${adminList }" var="menu">
 						<li class="snb2d snb2d_bo_tablegallery active show">
 							<a href="<c:url value='${menu.menuURL }/${sessionScope.authMember.mem_id }'/>" target="_self">
@@ -36,8 +36,10 @@
 							</a>
 						</li>
 					</c:forEach>
+						</ul>	
 				</c:when>
 				<c:otherwise>
+				<ul class="pf_snb2dul">
 					<c:forEach items="${menuList }" var="menu">
 						<c:choose>
 							<c:when test="${empty sessionScope.authMember['login_type'] }">
@@ -56,9 +58,9 @@
 							</c:otherwise>
 						</c:choose>
 					</c:forEach>
+				</ul>
 				</c:otherwise>
 			</c:choose>
-		</ul>
 	</li>
 </ul>
 </div>

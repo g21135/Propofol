@@ -5,28 +5,40 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.WebApplicationContext;
 
 import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.order.service.IOrderService;
+import kr.or.ddit.portfolio.dao.IBasicPageDAO;
+import kr.or.ddit.portfolio.service.IPortfolioService;
 import kr.or.ddit.vo.MemberVO;
 import kr.or.ddit.vo.OrderTbVO;
 import kr.or.ddit.vo.PagingVO;
+import kr.or.ddit.vo.PortfolioVO;
 
-@RestController
-@RequestMapping(value = "/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@Controller
+@RequestMapping(value = "/order")
 public class OrderController {
 	
 	@Inject
 	IOrderService service;
-	
-	@GetMapping("myOrderList")
+
+    @Inject
+    IPortfolioService portService;
+    @ResponseBody
+	@GetMapping(value="myOrderList", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public PagingVO<OrderTbVO> myOrderList(
 			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false) String pf_searchType,
@@ -51,7 +63,8 @@ public class OrderController {
 		return pagingVO;
 	}
 	
-	@GetMapping("adminOrderList")
+    @ResponseBody
+	@GetMapping(value="adminOrderList", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public PagingVO<OrderTbVO> adminOrderList(
 			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false) String pf_searchType,
@@ -73,7 +86,8 @@ public class OrderController {
 		return pagingVO;
 	}
 	
-	@GetMapping("adminOrder_modifyList")
+    @ResponseBody
+	@GetMapping(value="adminOrder_modifyList", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public PagingVO<OrderTbVO> adminOrderModifyList(
 			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false) String pf_searchType,
@@ -99,7 +113,8 @@ public class OrderController {
 		return pagingVO;
 	}
 	
-	@GetMapping("adminOrder_produceList")
+    @ResponseBody
+	@GetMapping(value="adminOrder_produceList", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public PagingVO<OrderTbVO> adminOrderProduceList(
 			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false) String pf_searchType,
@@ -124,7 +139,8 @@ public class OrderController {
 		return pagingVO;
 	}
 	
-	@GetMapping("choiceOrder")
+    @ResponseBody
+	@GetMapping(value="choiceOrder", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Map<String, Object> choiceOrder(
 			@RequestParam(required = true) Integer choice_num,
 			@RequestParam(required = true) String admin_id
@@ -145,7 +161,8 @@ public class OrderController {
 		return resultMap;
 	}
 	
-	@GetMapping("completion")
+    @ResponseBody
+	@GetMapping(value="completion", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Map<String, Object> completion(
 			@RequestParam(required = true) Integer completion_num
 			) {
@@ -162,4 +179,15 @@ public class OrderController {
 		return resultMap;
 	}
 	
+	@PostMapping(value="make")
+	public String update(
+			@RequestParam(name="port_num",required=false)Integer port_num, 
+			Model model, 
+			HttpSession session,
+			HttpServletRequest req) {
+			PortfolioVO pv = portService.retrievePort(port_num);
+			model.addAttribute("pv",pv);
+			session.setAttribute("make_id", pv.getMem_id());
+			return "makePortfolio/main";
+	}
 }

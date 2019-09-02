@@ -21,16 +21,13 @@ public class VerifyRecaptcha{
     public static void setSecretKey(String key){
         secret = key;
     }
-    
     public static boolean verify(String gRecaptchaResponse) throws IOException {
         if (gRecaptchaResponse == null || "".equals(gRecaptchaResponse)) {
             return false;
         }
-        
         try{
         URL obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
- 
         // add reuqest header
         con.setRequestMethod("POST");
         con.setRequestProperty("User-Agent", USER_AGENT);
@@ -38,7 +35,6 @@ public class VerifyRecaptcha{
  
         String postParams = "secret=" + secret + "&response="
                 + gRecaptchaResponse;
- 
         // Send post request
         con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -60,7 +56,6 @@ public class VerifyRecaptcha{
             response.append(inputLine);
         }
         in.close();
- 
         // print result
         System.out.println(response.toString());
          

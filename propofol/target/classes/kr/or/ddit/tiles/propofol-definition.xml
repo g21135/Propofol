@@ -70,6 +70,11 @@
       <put-attribute name="leftMenu" value="/WEB-INF/views/freeBoards/freeLeftMenu.jsp"></put-attribute>
       <put-attribute name="content" value="/WEB-INF/views/freeBoards/{1}.jsp"></put-attribute>
    </definition>
+   
+   <definition name="infoSharing/*" extends="parent2" preparer="prepareViewPostLeftMenu">
+      <put-attribute name="leftMenu" value="/WEB-INF/views/infoSharing/infoLeftMenu.jsp"></put-attribute>
+      <put-attribute name="content" value="/WEB-INF/views/infoSharing/{1}.jsp"></put-attribute>
+   </definition>
 
    <definition name="report/*" extends="parent2" preparer="prepareViewPostLeftMenu">
       <put-attribute name="leftMenu" value="/WEB-INF/views/report/reportLeftMenu.jsp"></put-attribute>
@@ -139,7 +144,7 @@
 	<definition name="parent4" template="/WEB-INF/views/managementPortfolio/main.jsp">
       <put-attribute name="title" value="Propofol - 포트폴리오 제작" />
 		<put-attribute name="topMenu" value="/WEB-INF/views/managementPortfolio/top.jsp" />
-		<put-attribute name="footer" value="/WEB-INF/views/managementPortfolio/footer.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/views/mainLayout/footer.jsp" />
    </definition>
    
 	<definition name="managementPortfolio/main" extends="parent4">

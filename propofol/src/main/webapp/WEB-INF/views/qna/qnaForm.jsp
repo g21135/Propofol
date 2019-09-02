@@ -44,6 +44,11 @@
 	         </c:forEach>
 		</c:if>
 		
+		<div id="fileArea" style="margin: 10px 0 10px 0;">
+			<input type="file" class="form-control" name="cus_files">
+		</div>
+		<input class="form-control btn btn-outline-dark" id="addFileUpload"type="button" value="추가">
+		
 	    <div class="notice_write_div">
 	        <label for="customer_answer" class="sound_no">내용<strong>필수</strong></label>
 	        <div class="wr_content">
@@ -52,11 +57,6 @@
 			</div>
 	    </div>
 	    
-	    <div id="fileArea">
-			<input type="file" class="form-control" name="cus_files">
-		</div>
-		<input class="form-control btn btn-outline-dark" id="addFileUpload"type="button" value="추가">
-		
 		<div class="pass_div">
 			비밀글<input type="checkbox" id="lock"/>
 			<input type="password" id="customer_pass" disabled name="customer_pass" placeholder="비밀번호" class="pass_input"/>

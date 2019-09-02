@@ -87,6 +87,20 @@
 .flip-card-back p a:hover {
 	background-color: dodgerblue; 
 }
+
+.flip-card-back h4 {
+	margin-top: 20px;
+}
+
+.flip-card-back .custom {
+	display: block;
+	font-weight: lighter;
+	margin-top: 5px;
+	color: #fa2f2f;
+	text-align: center;
+	text-decoration: line-through;
+}
+
 </style>
 <div class="flip-container">
 	<div class="flip-card">
@@ -96,9 +110,15 @@
 			</div>
 			<div class="flip-card-back">
 				<img src="${cPath}/img/pay/premium1-1.jpg">
-				<h4>아이유에요</h4>
-				<p>아이유입니당당당
-				<a href="${cPath}/addPayment">구매하기</a>
+				<h4>실버 회원권</h4>
+				<p>Propofol MEMBERSHIP
+				<strong class="custom">가격 : 9000원</strong>
+				<strong class="price">이벤트가 : 8000원</strong><br>
+				<p>- 포트폴리오를 무제한으로 제작할수있다.<br>
+				<p>- 취업공고를 제한없이 조회할수있다.<br>
+				<p>- 취업뉴스를 스크랩 할수있다.
+				<a href="${cPath}/addPayment?price=100&month=30&rank=실버">구매하기</a>
+				
 				</p>
 			</div>
 		</div>
@@ -111,9 +131,14 @@
 			</div>
 			<div class="flip-card-back">
 			<img src="${cPath}/img/pay/premium3-3.jpg">
-				<h4>아이유에요</h4>
-				<p>아이유입니당당당
-				<a href="${cPath}/addPayment">구매하기</a>
+				<h4>골드 회원권</h4>
+				<p>Propofol MEMBERSHIP
+				<strong class="custom">가격 : 27000원</strong>
+				<strong class="price">이벤트가 : 24000원</strong><br>
+				<p>- 포트폴리오를 무제한으로 제작할수있다.<br>
+				<p>- 취업공고를 제한없이 조회할수있다.<br>
+				<p>- 취업뉴스를 스크랩 할수있다.
+				<a href="${cPath}/addPayment?price=100&month=90&rank=골드">구매하기</a>
 				</p>
 			</div>
 		</div>
@@ -126,9 +151,14 @@
 			</div>
 			<div class="flip-card-back">
 			<img src="${cPath}/img/pay/premium6-6.jpg">
-				<h4>아이유에요</h4>
-				<p>아이유입니당당당
-				<a href="${cPath}/addPayment">구매하기</a>
+				<h4>다이아 회원권</h4>
+				<p>Propofol MEMBERSHIP
+				<strong class="custom">가격 : 54000원</strong>
+				<strong class="price">이벤트가 : 40000원</strong><br>
+				<p>- 포트폴리오를 무제한으로 제작할수있다.<br>
+				<p>- 취업공고를 제한없이 조회할수있다.<br>
+				<p>- 취업뉴스를 스크랩 할수있다.
+				<a href="${cPath}/addPayment?price=100&month=180&rank=다이아">구매하기</a>
 				</p>
 			</div>
 		</div>

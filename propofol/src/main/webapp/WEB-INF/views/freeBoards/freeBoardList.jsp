@@ -195,23 +195,3 @@
 	<div class="notice_page" id="pagingArea">
 		${pagingVO.pagingHTMLForBS}
 	</div>
-	
-	<!-- 로그인 후 이용 모달 -->
-<div class="modal fade modal-sm" id="loginmodal" tabindex="-1" role="dialog">
-	<div class="modal-dialog modal-sm" role="document">
-		<div class="modal-content modal-sm">
-			<div class="modal-header">
-				<h5 class="modal-title">로그인</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<p>로그인 후 이용 가능합니다.</p>
-			</div>
-			<div class="modal-footer">
-				<a class="dropdown-item" href='' data-toggle="modal" data-target="#myModal">확인</a>
-			</div>
-		</div>
-	</div>
-</div>

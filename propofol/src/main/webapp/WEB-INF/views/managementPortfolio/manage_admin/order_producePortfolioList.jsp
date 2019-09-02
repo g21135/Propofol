@@ -23,7 +23,7 @@
 					$("<div>").prop({"class" : "td_sub", "style":"width: 400px"}).append(
 					 	    	$("<div>").prop({"class":"no_num"}).append(
 					   	    		$("<a>").prop({"href": "#"}).append( //상세조회
-					   	    			$("<em>").html(order.orderFormList[0].form_name),
+					   	    			$("<em>").html(order.port_name),
 						   	    		$("<span>").prop({"class" : "badge badge-"+payVarClass+"", "style" : "margin-left : 5px "}).text(payVar)
 					   	 			)
 					   	 	    )  
@@ -45,8 +45,8 @@
 							$("<span>").text(order.order_date) //결제일
 					),
 					$("<div>").prop({"class":"Inlinev td_button", "style":"width: 130px"}).append(
-							$("<button onclick='workOnBtn("+order.order_num+")'>").prop({"type" : "button", "class":"btn btn-info", "style" : "margin : 0 5px 0 20px"}).text("작업"),	
-							$("<button onclick='completionBtn("+order.order_num+")'>").prop({"type" : "button", "class":"btn btn-primary", "style" : "margin : 0 5px"}).text("완료")	
+							$("<button onclick='workOnBtn("+order.port_num+")'>").prop({"type" : "button", "class":"btn btn-info", "style" : "margin : 0 5px 0 20px"}).text("작업"),	
+							$("<button onclick='completionBtn("+order.port_num+")'>").prop({"type" : "button", "class":"btn btn-primary", "style" : "margin : 0 5px"}).text("완료")	
 					)
 			 );
 		   pf_liTags.push(li);
@@ -55,14 +55,14 @@
 		   pagingArea.html(resp.pagingHTMLForBS);
 	}
 	
-	function workOnBtn(order_num){
-		pf_workOnForm.find("input[name='workOn_num']").val(order_num);
+	function workOnBtn(port_num){
+		pf_workOnForm.find("input[name='port_num']").val(port_num);
 		pf_workOnForm.submit();
-		pf_workOnForm.find("input[name='workOn_num']").val("");
+		pf_workOnForm.find("input[name='port_num']").val("");
 	}
 	
-	function completionBtn(order_num){
-		pf_completionForm.find("input[name='completion_num']").val(order_num);
+	function completionBtn(port_num){
+		pf_completionForm.find("input[name='completion_num']").val(port_num);
 		pf_completionForm.submit();
 		pf_completionForm.find("input[name='completion_num']").val("");
 	}
@@ -84,7 +84,7 @@
 	        success : function(resp){
 	        	successPfList(resp);
 			},
-			error : function(){
+			error : function(errorResp){
 				console.log(errorResp.status + ", " + errorResp.responseText);
 			}
 		});
@@ -101,7 +101,7 @@
     	        success : function(resp){
     	        	successPfList(resp);
     			},
-    			error : function(){
+    			error : function(errorResp){
     				console.log(errorResp.status + ", " + errorResp.responseText);
     			}
     		});
@@ -128,25 +128,7 @@
     	        	alert(resp.message);
     	        	pf_searchForm.submit();
     			},
-    			error : function(){
-    				console.log(errorResp.status + ", " + errorResp.responseText);
-    			}
-    		});
-        });
-
-		pf_workOnForm.on("submit", function(event){
-        	event.preventDefault();
-        	var queryString = $(this).serialize();
-        	$.ajax({
-            	url:"${cPath}/order/cancelOrder",
-            	method : "get",
-    	        data : queryString,
-    	        dataType : "json",
-    	        success : function(resp){
-    	        	alert(resp.message);
-    	        	pf_searchForm.submit();
-    			},
-    			error : function(){
+    			error : function(errorResp){
     				console.log(errorResp.status + ", " + errorResp.responseText);
     			}
     		});
@@ -160,11 +142,11 @@
 			<ul>
 				<li class="listTblTr listTblTh">
 					<div class="InlineN" style="width: 90px">주문 번호</div>
-					<div class="InlineN" style="width: 400px">요구사항</div>
+					<div class="InlineN" style="width: 400px">포트폴리오 이름</div>
 					<div class="Inlinev" style="width: 150px">회원아이디</div>
 					<div class="Inlinev" style="width: 100px">주문 타입</div>
-					<div class="Inlinev" style="width: 100px">주문일자</div>
-					<div class="Inlinev" style="width: 100px">완료일</div>
+					<div class="Inlinev" style="width: 100px">제작시작일자</div>
+					<div class="Inlinev" style="width: 100px">제작완료일</div>
 					<div class="Inlinev" style="width: 100px">결제일</div>
 					<div class="Inlinev" style="width: 130px">비고</div>
 				</li>
@@ -203,7 +185,7 @@
 	<form id="pf_completionForm">
 		<input type="hidden" name="completion_num" />
 	</form>
-	<form id="pf_workOnForm">
-		<input type="hidden" name="workOn_num" />
+	<form id="pf_workOnForm" action="${cPath}/order/make" method="post">
+		<input type="hidden" name="port_num" />
 	</form>
 </div>

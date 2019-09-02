@@ -237,7 +237,6 @@ public class MemberController {
     public int VerifyRecaptcha(HttpServletRequest request) {
 		VerifyRecaptcha.setSecretKey("6Ld3ybIUAAAAAIxxtqice4PDtqUqRLbyH5bHDjlE ");
         String gRecaptchaResponse = request.getParameter("recaptcha");
-        System.out.println(gRecaptchaResponse);
         //0 = 성공, 1 = 실패, -1 = 오류
         try {
             if(VerifyRecaptcha.verify(gRecaptchaResponse))

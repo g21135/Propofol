@@ -15,11 +15,10 @@
 	background : lightgray;
 }
 span.alarm_aTag{
-	margin-left : 50px;
-	width : 160px;
-	cursor: pointer;
-	display : inline-block;
-	font-size: 1.2em;
+    width: 85%;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 12px;
 }
 .alarm_read_span{
 	display: block;
@@ -32,4 +31,9 @@ span.alarm_aTag{
 	font-size: 1.3em;
 	color: red;
 	cursor: pointer;
+}
+.popover{
+    width: 275px;
+    overflow:auto;
+    height: 200px;    
 }

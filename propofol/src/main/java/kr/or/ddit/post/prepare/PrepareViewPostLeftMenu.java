@@ -24,9 +24,10 @@ public class PrepareViewPostLeftMenu implements ViewPreparer {
 	public void execute(Request arg0, AttributeContext arg1) {
 		PrepareMenuVO jobnews = new PrepareMenuVO("취업뉴스", "/jobnews");
 		PrepareMenuVO recruit = new PrepareMenuVO("채용공고", "/recruit");
+		PrepareMenuVO infoSharing = new PrepareMenuVO("정보공유", "/infoSharing");
 		PrepareMenuVO freeBoards = new PrepareMenuVO("자유게시판", "/freeBoards");
 
-		arg0.getContext(Request.REQUEST_SCOPE).put("communityList", Arrays.asList(jobnews, recruit, freeBoards));
+		arg0.getContext(Request.REQUEST_SCOPE).put("communityList", Arrays.asList(jobnews, recruit, infoSharing, freeBoards));
 		
 //		PrepareMenuVO[] prepare = null;
 //		for(int i = 0; i <= list.size(); i++) {

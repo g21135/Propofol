@@ -1,10 +1,10 @@
 @charset "UTF-8";
 
 .backDiv{
-	bottom: 165px;
+    bottom: 94px;
     position: fixed;
     z-index: 1000000000;
-    right: 120px;
+    right: 64px;
 }
 
 .chat{
@@ -18,14 +18,14 @@
 }	
 
 #chatbotBtn {
-	cursor: pointer;
-	border-radius: 50%;
-	position: fixed;
-	bottom: 100px;
-	width: 50px;
-	height: 50px;
-	z-index: 10000;
-	right: 100px
+    cursor: pointer;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 33px;
+    width: 50px;
+    height: 50px;
+    z-index: 10000;
+    right: 37px;
 }
 
 #chatModal{

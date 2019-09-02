@@ -21,6 +21,12 @@ public class NoticeVO {
 		super();
 		this.mem_id = mem_id;
 		this.notice_content = notice_content;
-		this.notice_url = notice_content;
+		this.notice_url = notice_url;
+	}
+	
+	public NoticeVO(String mem_id, String notice_content) {
+		super();
+		this.mem_id = mem_id;
+		this.notice_content = notice_content;
 	}
 }

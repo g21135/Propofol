@@ -19,8 +19,8 @@ public class AlarmServiceImpl implements IAlarmService {
 	IAlarmDAO dao;
 	
 	@Override
-	public List<NoticeVO> retreieveAlarm(PagingVO<NoticeVO> pv) {
-		List<NoticeVO> alarmList = dao.selectAlarmList(pv);
+	public List<NoticeVO> retreieveAlarm(String mem_id) {
+		List<NoticeVO> alarmList = dao.selectAlarmList(mem_id);
 		if(alarmList != null) {
 			return alarmList;
 		}else {

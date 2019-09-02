@@ -26,14 +26,6 @@
 	       </li>
 	       <li class="nav-item dropdown">
 	           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-	             aria-haspopup="true" aria-expanded="false"><span class="color-e">포트폴리오 테마/구성사항 관리</span></a>
-	           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-	             <a class="dropdown-item" href="">테마 관리</a>
-	             <a class="dropdown-item" href="">구성사항 관리</a>
-	           </div>
-	       </li>
-	       <li class="nav-item dropdown">
-	           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
 	             aria-haspopup="true" aria-expanded="false"><span class="color-e">주문 관리</span></a>
 	           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 	             <a class="dropdown-item" href="<c:url value='/orderPortfolio'/>">신청 관리</a>
@@ -50,7 +42,6 @@
 		             aria-haspopup="true" aria-expanded="false"><span class="color-e">포트폴리오관리</span></a>
 		           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 		             <a class="dropdown-item" href="<c:url value='/myPortfolio'/>">제작 포트폴리오</a>
-		             <a class="dropdown-item" href="<c:url value='/temporaryPortfolio'/>">임시저장 포트폴리오</a>
 		           </div>
 		       </li>
 		       <li class="nav-item dropdown">
@@ -75,7 +66,7 @@
 				<c:when test="${sessionScope.authMember.mem_id eq 'root'}">
 				  <div style="left: -65px; min-width: 100px;" id="loginMenu" class="dropdown-menu" aria-labelledby="navbarDropdown" style="width: 50px;">
 					<a class="dropdown-item" href="<c:url value='/login'/>">로그아웃</a>
-		            <a class="dropdown-item" href=''>관리자 페이지</a>
+		            <a class="dropdown-item" href="<c:url value='member/manager/${sessionScope.authMember.mem_id}'/>">관리자 페이지</a>
 		            <a class="dropdown-item" href=''>포트폴리오 관리</a>
 		          </div>
 				</c:when>
@@ -92,7 +83,7 @@
 							<a class="dropdown-item" href="<c:url value='/naverLogout'/>">로그아웃</a>
 						</c:when>
 					</c:choose>
-					<a class="dropdown-item" href="<c:url value='/member/manager/${sessionScope.authMember.mem_id }'/>">마이페이지</a>
+					<a class="dropdown-item" href="<c:url value='/member/members/${sessionScope.authMember.mem_id }'/>">마이페이지</a>
 		            <a class="dropdown-item" href="<c:url value='/managementPort'/>">포트폴리오 관리</a>
 		          </div>
 				</c:when>

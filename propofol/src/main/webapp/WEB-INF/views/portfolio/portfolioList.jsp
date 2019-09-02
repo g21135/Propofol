@@ -2,9 +2,15 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!-- 좋아요 폼 -->
-<form method="post" id="likeForm" action="/like">
-	<input type="hidden" name="port_num" />
-	<input name="mem_id" type="hidden" value="${sessionScope.authMember.mem_id}">
+<form method="post" id="likeForm" action="${cPath}/portfolio">
+	<input name="port_num" type="hidden" />
+	<input name="mem_id" type="hidden" value="${sessionScope.authMember.mem_id}" />
+</form>
+
+<form method="post" id="deleteForm" action="${cPath}/portfolio">
+	<input type="hidden" name="_method" value="delete" />
+	<input name="port_num" type="hidden" />
+	<input name="mem_id" type="hidden" value="${sessionScope.authMember.mem_id}" />
 </form>
 
 <script>
@@ -14,60 +20,61 @@
 	}
 	
 	function successPfList(resp){
-		  var pf_liTags = [];
+		var pf_liTags = [];
 		  $(resp.dataList).each(function(idx, port){
-		     let li = $("<li>").prop({"class" : "pf_gall_li col-gn-3 gallWST"})
-		                 .append(
-		                     $("<div>").prop({"class" : "pf_gall_box"}).append(
-		                    	$("<div>").prop({"class" : "pf_gall_chk"})	.append(
-		                    		$("<span>").prop({"class" : "pf_sound_only"})	
-		                    	),
-		                    	$("<div>").prop({"class" : "pf_gall_con"}).append(
-		                    		$("<div>").prop({"class" : "pf_gall_boxa"}).append(
-		                    			$("<a>").prop({"href" : port.port_addr }).append(
-		                    				$("<em>").prop({"class" : "pf_iconPs pf_tit"}).append(
-		                    					$("<i>").prop({"class" : "fa fa-bullhorn pf_icoNotice"}).css({background:"none"}),
-			                    				$("<span>").text(port.port_addr).css({color:"white"})
-		                    				),
-		                    				$("<i>").prop({"class" : "pf_imgAr"}).append(
-		                    					$("<img>").attr({src : "${cPath}/img/"+port.port_img} ).css({width:"300px", height:"250px"})	
-		                    				),
-		                    				$("<em>").prop({"class" : "pf_gall_info"}).append(
-		                    					$("<span>").prop({"class" : "pf_sound_only"}).text(port.themeList[0].theme_name),
-		                    					$("<i>").prop({"class" : "fa fa-hashtag", "aria-hidden" : "true"}),
-		                    					$("<span>").text(port.themeList[0].theme_name),
-		                    					$("<br>"),
-		                    					$("<span>").prop({"class" : "pf_gall_date"}).append(
-		                    						$("<span>").prop({"class" : "pf_sound_only"}).text(port.port_date),
-		                    						$("<i>").prop({"class" : "fa fa-hashtag", "aria-hidden" : "true"}),
-		                    						$("<span>").text(port.port_date)
-		                    					),
-		                    					$("<u>").append(
-		                    						$("<span>").prop({"class" : "pf_sound_only"}).text(port.mem_id),
-		                    						$("<span class='alarm_memId'>").text(port.mem_id)
-		                    					),
-		                    					$("<u>").append(
-		                    						$("<i>").prop({"class" : "fa fa-heart", "style":"color:red;"}).text(port.port_like)	
-		                    					)
-		                    				) //</em>
-		                    			) //</a>
-		                    		), // </div>	
-		                    		$("<div>").prop({"class" : "pf_gall_text_href"}).append(
-			                    		$("<span>").prop({"class" : "pf_tit"}).append(
-			                    			$("<span class='alarm_portName'>").text(port.port_name),
-			                    			$("<br>"),
-			                    			$("<button>").prop({"type" : "button", "class" : "btn btn-light", "id":"likeBtn" + port.port_num + ""})
-	    	                    							.attr({"onclick" : "like("+port.port_num+")"})
-			                    						 .append(
-			                    					$("<i>").prop({"class" : "fa fa-heart-o"})
-			                    							.text("좋아요")	
-			                    			)
-			                    		) // </span>
-			                    	) // </div>
-		                     ) // </div>
-		             ) // </div>
-		      ); // </li>
-		   pf_liTags.push(li);
+			var like_num = port.like_num == 0 ? "좋아요" : "좋아요 취소";
+			var like_func = port.like_num == 0 ? "like("+port.port_num+")" : "deleteLike("+port.port_num+")";
+			var heart = port.like_num == 0 ? "fa fa-heart" : "fa fa-heart-o";
+			  let li = $("<li>").prop({"class" : "pf_gall_li col-gn-3 gallWST"})
+			                 .append(
+			                     $("<div>").prop({"class" : "pf_gall_box"}).append(
+			                    	$("<div>").prop({"class" : "pf_gall_chk"})	.append(
+			                    		$("<span>").prop({"class" : "pf_sound_only"})	
+			                    	),
+			                    	$("<div>").prop({"class" : "pf_gall_con"}).append(
+			                    		$("<div>").prop({"class" : "pf_gall_boxa"}).append(
+			                    			$("<a>").prop({"href" : port.port_addr }).append(
+			                    				$("<em>").prop({"class" : "pf_iconPs pf_tit"}).append(
+			                    					$("<i>").prop({"class" : "fa fa-bullhorn pf_icoNotice"}).css({background:"none"}),
+				                    				$("<span>").text(port.port_addr).css({color:"white"})
+			                    				),
+			                    				$("<i>").prop({"class" : "pf_imgAr"}).append(
+			                    					$("<img>").attr({src : "${cPath}/img/"+port.port_img} ).css({width:"300px", height:"250px"})	
+			                    				),
+			                    				$("<em>").prop({"class" : "pf_gall_info"}).append(
+			                    					$("<i>").prop({"class" : "fa fa-hashtag", "aria-hidden" : "true"}),
+			                    					$("<br>"),
+			                    					$("<span>").prop({"class" : "pf_gall_date"}).append(
+			                    						$("<span>").prop({"class" : "pf_sound_only"}).text(port.port_date),
+			                    						$("<i>").prop({"class" : "fa fa-hashtag", "aria-hidden" : "true"}),
+			                    						$("<span>").text(port.port_date)
+			                    					),
+			                    					$("<u>").append(
+			                    						$("<span>").prop({"class" : "pf_sound_only"}).text(port.mem_id),
+			                    						$("<span class='alarm_memId'>").text(port.mem_id)
+			                    					),
+			                    					$("<u>").append(
+			                    						$("<i>").prop({"class" : "fa fa-heart", "style":"color:red;"}).text(port.port_like)	
+			                    					)
+			                    				) //</em>
+			                    			) //</a>
+			                    		), // </div>	
+			                    		$("<div>").prop({"class" : "pf_gall_text_href"}).append(
+				                    		$("<span>").prop({"class" : "pf_tit"}).append(
+				                    			$("<span class='alarm_portName'>").text(port.port_name),
+				                    			$("<br>"),
+				                    			$("<button>").prop({"type" : "button", "class" : "btn btn-light", "id":"likeBtn" + port.port_num + ""})
+		    	                    							.attr({"onclick" : like_func})
+				                    						 .append(
+				                    					$("<i>").prop({"class" : heart})
+				                    							.text(like_num)	
+				                    			)
+				                    		) // </span>
+				                    	) // </div>
+			                     ) // </div>
+			             ) // </div>
+			      ); // </li>
+			   pf_liTags.push(li);
 		   });
 		   pf_ulTag.html(pf_liTags);
 		   pg_wrap.html(resp.pagingHTMLForBS);
@@ -75,7 +82,7 @@
 	
 	function like(port_num){
 		var mem_id = $("#member_id").val();
-		var likeBtn=$("#likeBtn"+port_num+"");  //수정버튼
+		var likeBtn=$("#likeBtn"+port_num+""); 
 			if(!mem_id) {
 				var check = confirm("로그인 후 이용 가능합니다");
 				if(check){
@@ -88,6 +95,22 @@
 			    $("#likeForm").submit();
 			}
 	 };
+	 
+	function deleteLike(port_num){
+		var mem_id = $("#member_id").val();
+		var likeBtn=$("#likeBtn"+port_num+""); 
+			if(!mem_id) {
+				var check = confirm("로그인 후 이용 가능합니다");
+				if(check){
+					$("#myModal").modal("show");					
+				}else{
+					return;
+				}
+			}else{
+				$("[name=port_num]", "#deleteForm").val(port_num);
+			    $("#deleteForm").submit();
+			}
+	 };
 	
 	$(function(){
 		pf_searchForm = $('#pf_searchForm');
@@ -95,7 +118,6 @@
 		pf_ulTag = $("#pf_gall_ul");
 		pg_wrap = $("#pg_wrap");
         var queryString = $(this).serialize();
-        
         $.ajax({
         	url:"${cPath}/portfolio",
         	method : "get",
@@ -129,23 +151,26 @@
         pf_searchBth.on("click", function(){
         	var pf_searchType = $("#pf_searchType");
     		var pf_searchWord = $("#pf_searchWord");
+    		var mem_id = $("#mem_id");
     		pf_searchForm.find("input[name='pf_searchType']").val(pf_searchType.val());
     		pf_searchForm.find("input[name='pf_searchWord']").val(pf_searchWord.val());
+    		pf_searchForm.find("input[name='mem_id']").val(mem_id.val());
     		pf_searchForm.submit();
         })
         
         var likeForm = $("#likeForm"); 
+        var deleteForm = $("#deleteForm"); 
+        
     	var commonHandler = function(event){
    	       var action = $(this).attr("action");
    	       var method = $(this).attr("method");
    	       var queryString = $(this).serialize();
    	       $.ajax({
-   	          url:action,
+   	          url : action,
    	          data : queryString,
    	          method : method,
    	          dataType : "json",
    	          success : function(resp) {
-				alert(resp.message);
 				pf_searchForm.submit();
    	          },
    	          error : function(errorResp) {
@@ -156,6 +181,7 @@
    	       return false;
    	    } // commonHandler end
     	likeForm.on("submit", commonHandler); 
+    	deleteForm.on("submit", commonHandler); 
 	})
 </script>
 
@@ -212,6 +238,4 @@
 		<input type="hidden" name="pf_searchWord" value="${pagingVO.searchWord}" />
 		<input type="hidden" name="page" value="${pagingVO.currentPage }"/>
 	</form>
-	
-	
 </div>

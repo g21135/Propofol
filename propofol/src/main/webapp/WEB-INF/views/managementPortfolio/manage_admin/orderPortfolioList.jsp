@@ -23,7 +23,7 @@
 					$("<div>").prop({"class" : "td_sub", "style":"width: 400px"}).append(
 					 	    	$("<div>").prop({"class":"no_num"}).append(
 					   	    		$("<a>").prop({"href": "#"}).append( //상세조회
-					   	    			$("<em>").html(order.orderFormList[0].form_name),
+					   	    			$("<em>").html(order.port_name),
 						   	    		$("<span>").prop({"class" : "badge badge-"+payVarClass+"", "style" : "margin-left : 5px "}).text(payVar)
 					   	 			)
 					   	 	    )  
@@ -136,11 +136,11 @@
 			<ul>
 				<li class="listTblTr listTblTh">
 					<div class="InlineN" style="width: 90px">주문 번호</div>
-					<div class="InlineN" style="width: 400px">요구사항</div>
+					<div class="InlineN" style="width: 400px">포트폴리오 이름</div>
 					<div class="Inlinev" style="width: 150px">회원아이디</div>
 					<div class="Inlinev" style="width: 100px">주문 타입</div>
-					<div class="Inlinev" style="width: 100px">주문일자</div>
-					<div class="Inlinev" style="width: 100px">완료일</div>
+					<div class="Inlinev" style="width: 100px">제작 시작일자</div>
+					<div class="Inlinev" style="width: 100px">제작 완료일</div>
 					<div class="Inlinev" style="width: 100px">결제일</div>
 					<div class="Inlinev" style="width: 130px">비고</div>
 				</li>

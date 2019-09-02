@@ -32,9 +32,6 @@
 								$("<span>").prop({"class":"sv_member"})
 										   .text(port.mem_id)
 					),
-					$("<div>").prop({"class":"Inlinev td_num", "style":"width: 80px"}).append(
-							$("<span>").text(port.themeList[0].theme_name)	
-					),
 					$("<div>").prop({"class":"Inlinev td_date", "style":"width: 100px"}).append(
 							$("<span>").text(port.port_date)
 					),
@@ -69,7 +66,6 @@
 		pf_ulTag = $("#pf_gall_ul");
 		pagingArea = $("#pagingArea");
         var queryString = $(this).serialize();
-        
         $.ajax({
         	url:"${cPath}/adminMenagement/allMemberPortList",
         	method : "get",
@@ -78,7 +74,7 @@
 	        success : function(resp){
 	        	successPfList(resp);
 			},
-			error : function(){
+			error : function(errorResp){
 				console.log(errorResp.status + ", " + errorResp.responseText);
 			}
 		});
@@ -95,7 +91,7 @@
     	        success : function(resp){
     	        	successPfList(resp);
     			},
-    			error : function(){
+    			error : function(errorResp){
     				console.log(errorResp.status + ", " + errorResp.responseText);
     			}
     		});
@@ -122,7 +118,7 @@
     	        	alert(resp.message);
     	        	pf_searchForm.submit();
     			},
-    			error : function(){
+    			error : function(errorResp){
     				console.log(errorResp.status + ", " + errorResp.responseText);
     			}
     		});
@@ -140,7 +136,7 @@
     	        	alert(resp.message);
     	        	pf_searchForm.submit();
     			},
-    			error : function(){
+    			error : function(errorResp){
     				console.log(errorResp.status + ", " + errorResp.responseText);
     			}
     		});
@@ -156,7 +152,6 @@
 					<div class="InlineN" style="width: 90px">번호</div>
 					<div class="InlineN" style="width: 480px">포트폴리오이름</div>
 					<div class="Inlinev" style="width: 580px">회원아이디</div>
-					<div class="Inlinev" style="width: 80px">테마</div>
 					<div class="Inlinev" style="width: 100px">제작일</div>
 					<div class="Inlinev" style="width: 130px">비고</div>
 				</li>

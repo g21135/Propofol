@@ -16,14 +16,49 @@
 	
 		<span class="top-underline-animation "></span>
 	</div>
-	<span id="configSapn" data-toggle="modal" data-target="#configModal">
+	<span id="configSpan" data-toggle="modal" data-target="#configModal">
 		<i id="config" class="config fas fa-cog">정보수정</i>
 	</span>
+	<c:if test="${sessionScope.authMember.mem_id eq 'root'}">
+	<span id="attachSpan">
+		<i id="attach" onclick="selectFileWithCKFinder('attach')" class="config fas fa-folder-plus">첨푸파일 확인</i>
+	</span>
 	
+	<span id="requireSpan">
+		<i id="require" class="config fas fa-comment-medical">요구사항 확인</i>
+	</span>
+	
+	<script>
+	$("#require").on("click",function(){
+		alert("${pv.port_requirement}");
+	})
+	function selectFileWithCKFinder( elementId ) {
+		CKFinder.modal( {
+			chooseFiles: true,
+			width: 800,
+			height: 600,
+			onInit: function( finder ) {
+				finder.on( 'files:choose', function( evt ) {
+					var file = evt.data.files.first();
+					var output = document.getElementById( elementId );
+					output.value = file.getUrl();
+				} );
+
+				finder.on( 'file:choose:resizedImage', function( evt ) {
+					var output = document.getElementById( elementId );
+					output.value = evt.data.resizedUrl;
+				} );
+			}
+		} );
+	}
+	</script>
+		
+	
+	</c:if>
 	<div class="right">
 		<a id="preview" href="#"><i class="far fa-window-maximize"> 미리보기</i></a>
 		<a id="tempSave" href="#"><i class="far fa-save"> 임시저장</i></a>
-		<a href="#"><i class="far fa-share-square"> 홈페이지 반영</i></a>
+		<a id="portSave" href="#"><i class="far fa-share-square"> 홈페이지 반영</i></a>
 	</div>
 </div>
 
@@ -44,14 +79,14 @@
 				<tr>
 					<td class="config-td1">주소 설정</td>
 					<td>
-						<span>http://localhost/portfolio/</span>
-						<input class="form-control" type="text" name="port_addr" style="width: 36%; display: inline-block;" value="${pv.port_addr}"></td>
+						<span>localhost/portfolio/</span>
+						<input class="form-control" type="text" name="port_addr" style="width: 43%; display: inline-block;" value="${pv.port_addr}"></td>
 					<td rowspan="4">
 						<c:if test="${empty pv.port_img}">
-							<img class="img-rounded" src="${cPath}/img/notImage.png" style="width: 200px; height: 230px; ">	
+							<img id="foo" class="img-rounded" src="${cPath}/img/notImage.png" style="width: 200px; height: 230px; ">	
 						</c:if>
 						<c:if test="${not empty pv.port_img}">
-							<img class="img-rounded" src="${cPath}/portfolio/${pv.port_img}" style="width: 200px; height: 230px; ">	
+							<img id="foo" class="img-rounded" src="${cPath}/img/portfolio/${pv.port_img}" style="width: 200px; height: 230px; ">	
 						</c:if>
 					</td>
 				</tr>
@@ -68,7 +103,7 @@
 				</tr>
 				<tr>
 					<td class="config-td1">대표이미지</td>
-					<td><input type="file" name="port_image" value="${pv.port_img}"></td>
+					<td><input id="port_image" type="file" name="port_image"></td>
 				</tr>
 				<c:if test="${question_tel eq 'Y' or pv.question_tel eq 'Y'}">
 					<tr>
@@ -113,9 +148,7 @@
 			</table>
       </div>
       <div class="modal-footer">
-        <input type="reset" class="btn btn-default" style="float: left;" value="초기화 ">
-        <input type="button" class="btn btn-default" data-dismiss="modal" value="닫기">
-        <input id="savePortInfo" type="button" class="btn btn-primary" data-dismiss="modal" value="저장">
+        <input id="savePortInfo" type="button" class="btn btn-primary" data-dismiss="modal" value="확인">
       </div>
 	</form>
     </div>
@@ -128,12 +161,41 @@
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3e8d766575fccfc436ac9842183cea79&libraries=services"></script>
 <script>
-$("#configSapn").on('mouseenter', function(event) {
+//파일 선택시 이미지 태그에 이미지 변경
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $('#foo').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+$("#port_image").change(function() {
+    readURL(this);
+});   
+
+$("#configSpan").on('mouseenter', function(event) {
 	$(this).css({"color":"white","border": "1px solid white"});
 	$("#config").css({"color":"white"});
 }).on('mouseleave', function(event) {
 	$(this).css({"color":"gray","border": ""});
 	$("#config").css({"color":"gray"});
+});
+
+$("#attachSpan").on('mouseenter', function(event) {
+	$(this).css({"color":"white","border": "1px solid white"});
+	$("#attach").css({"color":"white"});
+}).on('mouseleave', function(event) {
+	$(this).css({"color":"gray","border": ""});
+	$("#attach").css({"color":"gray"});
+});
+$("#requireSpan").on('mouseenter', function(event) {
+	$(this).css({"color":"white","border": "1px solid white"});
+	$("#require").css({"color":"white"});
+}).on('mouseleave', function(event) {
+	$(this).css({"color":"gray","border": ""});
+	$("#require").css({"color":"gray"});
 });
 
 var previewForm = $("#previewForm");
@@ -174,23 +236,17 @@ $("#tempSave").on("click",function(){
 	$("#content").find(".edit").each(function(){ 
 		$(this).prop("contenteditable",false);
 	});
-
+	
+	$("#content").find(".edit").find(".cke_widget_drag_handler_container").remove();
+	
 	pageContent.each(function(i,v) {
 		var name = $(this).find("input.inputMenuName").val();	
 		var content = $(this).find(".makePage").data("content").html();
-		var imgSrc = $(this).find(".makePage").attr("src");
+		var imgSrc = $(this).find(".makePage").data("clob");
 		tempSaveForm.append($("<input>").prop({"class":"tempClass","type":"hidden","name":"tempSaveMenu"}).val(name));
 		tempSaveForm.append($("<input>").prop({"class":"tempClass","type":"hidden","name":"tempSaveContent"}).val(content));
 		tempSaveForm.append($("<input>").prop({"class":"tempClass","type":"hidden","name":"imgSrc"}).val(imgSrc));
 	})
-	
-	tempSaveForm.find("[name=question_tel]").val("${pv.question_tel}");
-	tempSaveForm.find("[name=question_sns]").val("${pv.question_sns}");
-	tempSaveForm.find("[name=question_map]").val("${pv.question_map}");
-
-	tempSaveForm.submit();
-	tempSaveForm.find(".tempClass").remove();
-	
 	$("#content").find(".edit").each(function(){ 
 		$(this).prop("contenteditable",true);
 		
@@ -205,6 +261,93 @@ $("#tempSave").on("click",function(){
 		    
 		})
 	});
+	<c:if test="${not empty pv}">
+		tempSaveForm.find("[name=question_tel]").val("${pv.question_tel}");
+		tempSaveForm.find("[name=question_sns]").val("${pv.question_sns}");
+		tempSaveForm.find("[name=question_map]").val("${pv.question_map}");
+	</c:if>
+	
+	<c:if test="${empty pv}">
+		tempSaveForm.find("[name=question_tel]").val("${question_tel}");
+		tempSaveForm.find("[name=question_sns]").val("${question_sns}");
+		tempSaveForm.find("[name=question_map]").val("${question_map}");
+	</c:if>
+
+	tempSaveForm.submit();
+	tempSaveForm.find(".tempClass").remove();
+})
+
+$("#portSave").on("click",function(){
+	$("[name=port_name]").val($("#menuName").val());
+	
+	if(!$("#layout").length){
+		alert("현재 화면에서는 홈페이지반영을 할 수 없습니다.");
+		return;
+	}
+	if(!$("[name=port_name]").val()){
+		alert("포트폴리오명을 입력해주세요");
+		return;
+	}
+	if(!$("[name=port_addr]").val()){
+		alert("포트폴리오 주소를 정보 수정에서 입력해주세요");
+ 		return;
+	}
+	if(!$("[name=public]:checked")){
+		alert("공개여부를 정보 수정에서 선택해주세요");
+ 		return;
+	}
+	
+	successTag.trigger("click");
+	modifyTag.trigger("mouseleave");
+	
+	var pageContent = $("#page #pageView .pageContent");
+	
+	for(name in CKEDITOR.instances)
+	{
+	    CKEDITOR.instances[name].destroy(true);
+	}
+	$("#content").find(".edit").each(function(){ 
+		$(this).prop("contenteditable",false);
+	});
+	
+	$("#content").find(".edit").find(".cke_widget_drag_handler_container").remove();
+	
+	pageContent.each(function(i,v) {
+		var name = $(this).find("input.inputMenuName").val();	
+		var content = $(this).find(".makePage").data("content").html();
+		var imgSrc = $(this).find(".makePage").data("clob");
+		tempSaveForm.append($("<input>").prop({"class":"tempClass","type":"hidden","name":"tempSaveMenu"}).val(name));
+		tempSaveForm.append($("<input>").prop({"class":"tempClass","type":"hidden","name":"tempSaveContent"}).val(content));
+		tempSaveForm.append($("<input>").prop({"class":"tempClass","type":"hidden","name":"imgSrc"}).val(imgSrc));
+	})
+	$("#content").find(".edit").each(function(){ 
+		$(this).prop("contenteditable",true);
+		
+		CKEDITOR.inline($(this).attr("id"),{
+			extraPlugins: 'font, sourcedialog, image2, html5video, widget, widgetselection, clipboard, lineutils, youtube, colorbutton, panelbutton',
+		    removePlugins: 'image',
+		    filebrowserBrowseUrl: '${cPath}/js/ckfinder/ckfinder.html',
+		    filebrowserUploadUrl: '${cPath}/ckfinder/connector?command=QuickUpload&type=Files',
+		    youtube_controls : true,
+		    youtube_responsive : true,
+		    allowedContent : true
+		    
+		})
+	});
+	<c:if test="${not empty pv}">
+		tempSaveForm.find("[name=question_tel]").val("${pv.question_tel}");
+		tempSaveForm.find("[name=question_sns]").val("${pv.question_sns}");
+		tempSaveForm.find("[name=question_map]").val("${pv.question_map}");
+	</c:if>
+	
+	<c:if test="${empty pv}">
+		tempSaveForm.find("[name=question_tel]").val("${question_tel}");
+		tempSaveForm.find("[name=question_sns]").val("${question_sns}");
+		tempSaveForm.find("[name=question_map]").val("${question_map}");
+	</c:if>
+
+	tempSaveForm.submit();
+	tempSaveForm.find(".tempClass").remove();
 })
 
 tempSaveForm.on("submit",function(){
@@ -255,7 +398,9 @@ $("#preview").on("click",function(){
 	$("#content").find(".edit").each(function(){ 
 		$(this).prop("contenteditable",false);
 	});
+	$("#content").find(".edit").find(".cke_widget_drag_handler_container").remove();
 
+	
 	pageContent.each(function(i,v) {
 		var name = $(this).find("input.inputMenuName").val();	
 		var content = $(this).find(".makePage").data("content").html();

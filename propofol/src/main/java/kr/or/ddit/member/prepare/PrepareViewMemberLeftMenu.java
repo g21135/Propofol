@@ -17,11 +17,11 @@ public class PrepareViewMemberLeftMenu implements ViewPreparer {
 		PrepareMenuVO memModify = new PrepareMenuVO("마이페이지", "/member/members");
 		PrepareMenuVO memDelete = new PrepareMenuVO("회원탈퇴", "/member/members/leave");
 		PrepareMenuVO memList = new PrepareMenuVO("회원관리", "/member/manager");
-		PrepareMenuVO payment = new PrepareMenuVO("매출현황관리", "/member/manager/payment");
 		PrepareMenuVO report = new PrepareMenuVO("신고회원관리", "/manager/report");
+		PrepareMenuVO payment = new PrepareMenuVO("매출현황관리", "/manager/sales");
 
 		arg0.getContext(Request.REQUEST_SCOPE).put("menuList", Arrays.asList(memModify, memDelete));
-		arg0.getContext(Request.REQUEST_SCOPE).put("adminList", Arrays.asList(memList, payment, report));
+		arg0.getContext(Request.REQUEST_SCOPE).put("adminList", Arrays.asList(memList, report, payment));
 	}
 
 }

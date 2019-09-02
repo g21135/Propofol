@@ -8,7 +8,7 @@ public class SendSMS {
 	        SMS sms = new SMS();
 	        sms.appversion("TEST/1.0");
 	        sms.charset("utf8");
-	        sms.setuser("mm9812", "ghfhemf12");// coolsms 계정 입력해주시면되요
+	        sms.setuser("mm9812", "ghfhemf12");// coolsms 계정 입력
 
 	        String number = null;// 받을 사람 폰번호
 	        number= phoneNumber;		

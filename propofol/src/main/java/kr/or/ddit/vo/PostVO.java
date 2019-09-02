@@ -2,6 +2,7 @@ package kr.or.ddit.vo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
@@ -43,6 +44,8 @@ public class PostVO {
 	private String type_name;
 	private Integer post_depth;
 	private String post_report;
+	private String post_image;
+	private MultipartFile post_img;
 	
 	private int rowcnt;
 	
@@ -60,4 +63,13 @@ public class PostVO {
 	private transient List<AttachVO> attachList;
 	
 	private int reply_cnt;
+	
+	//이미지 저장용
+	public void setPost_img(MultipartFile post_img) {
+		if(post_img == null || org.apache.commons.lang3.StringUtils.isBlank(post_img.getOriginalFilename())) {
+			return;
+		}
+		this.post_img = post_img;
+		this.post_image = UUID.randomUUID().toString();
+	}
 }

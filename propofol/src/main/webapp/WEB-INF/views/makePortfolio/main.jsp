@@ -39,6 +39,10 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="<c:url value='/js/ckeditor/ckeditor.js'/>"></script>
+<script src="<c:url value='/js/ckfinder/ckfinder.js'/>"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
 
 <!-- fontawesome -->
 <script src="https://kit.fontawesome.com/4409c92568.js"></script>

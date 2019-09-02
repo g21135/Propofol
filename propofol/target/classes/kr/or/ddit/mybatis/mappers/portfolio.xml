@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.portfolio.dao.IPortfolioDAO">
+	<sql id="portLike">
+		<if test="searchVO != null">
+			<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchVO.mem_id)">
+				(SELECT COUNT(*) FROM PORTLIKE E WHERE E.PORT_NUM = C.PORT_NUM AND E.MEM_ID = #{searchVO.mem_id,jdbcType=VARCHAR}) LIKE_NUM,
+			</if>
+			<if test="@org.apache.commons.lang3.StringUtils@isBlank(searchVO.mem_id)">
+				0 LIKE_NUM,
+			</if>
+		</if>
+		
+	</sql>
+	
 	<sql id="searchFrag">
 		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)">
 			<choose>
@@ -60,26 +72,49 @@
 		</collection>
 	</resultMap>
 	
+	<select id="selectMyPortfolioList" resultMap="portfolioMap" parameterType="PagingVO">
+		SELECT B.*
+			FROM (
+				SELECT ROWNUM RNUM, A.*
+				FROM (
+					SELECT 	PORT_NUM,    MEM_ID,    PORT_NAME,
+				            PORT_MAKE,    PORT_BAN,    PORT_PUBLIC,
+				            PORT_READ,    PORT_SCRAP,    PORT_SHARE,
+				            PORT_ADDR,    C.THEME_NUM,    TO_CHAR(PORT_DATE, 'YYYY-MM-DD') PORT_DATE,
+				            PORT_IMG, PORT_SUC, PORT_SNS_NAME,    PORT_SNS_ADDR,    PORT_EXPLAIN,
+				            PORT_USER_ADDR,    QUESTION_TEL,    QUESTION_SNS,    QUESTION_MAP, (SELECT COUNT(*) FROM PORTLIKE D WHERE D.PORT_NUM=C.PORT_NUM GROUP BY C.PORT_NUM) PORT_LIKE,
+				            D.THEME_NAME, D.THEME_IMG, ORDER_NUM
+				FROM PORTFOLIO C LEFT OUTER JOIN THEME D ON (C.THEME_NUM = D.THEME_NUM)
+				WHERE 1=1
+					<include refid="manageMentFrag" />
+					<include refid="searchFrag" />
+				ORDER BY PORT_NUM DESC
+				) A
+			) B
+       		WHERE RNUM BETWEEN #{startRow} AND #{endRow}  AND ORDER_NUM IS NULL
+	</select>
+	
 	<select id="selectPortfolioList" resultMap="portfolioMap" parameterType="PagingVO">
 		SELECT B.*
 			FROM (
 				SELECT ROWNUM RNUM, A.*
 				FROM (
 					SELECT 	PORT_NUM,    MEM_ID,    PORT_NAME,
-							    PORT_MAKE,    PORT_BAN,    PORT_PUBLIC,
-							    PORT_READ,    PORT_SCRAP,    PORT_SHARE,
-							    PORT_ADDR,    C.THEME_NUM,    TO_CHAR(PORT_DATE, 'YYYY-MM-DD') PORT_DATE,
-							    PORT_IMG, PORT_SUC, PORT_SNS_NAME,    PORT_SNS_ADDR,    PORT_EXPLAIN,
-			    				PORT_USER_ADDR,    QUESTION_TEL,    QUESTION_SNS,    QUESTION_MAP, PORT_LIKE,
-							    D.THEME_NAME, D.THEME_IMG
-					FROM PORTFOLIO C LEFT OUTER JOIN THEME D ON (C.THEME_NUM = D.THEME_NUM)
-					WHERE 1=1
+				            PORT_MAKE,    PORT_BAN,    PORT_PUBLIC,
+				            PORT_READ,    PORT_SCRAP,    PORT_SHARE,
+				            PORT_ADDR,    C.THEME_NUM,    TO_CHAR(PORT_DATE, 'YYYY-MM-DD') PORT_DATE,
+				            PORT_IMG, PORT_SUC, PORT_SNS_NAME,    PORT_SNS_ADDR,    PORT_EXPLAIN,
+				            PORT_USER_ADDR,    QUESTION_TEL,    QUESTION_SNS,    QUESTION_MAP, (SELECT COUNT(*) FROM PORTLIKE D WHERE D.PORT_NUM=C.PORT_NUM GROUP BY C.PORT_NUM) PORT_LIKE,
+							<include refid="portLike" />
+				            D.THEME_NAME, D.THEME_IMG, ORDER_NUM
+				FROM PORTFOLIO C LEFT OUTER JOIN THEME D ON (C.THEME_NUM = D.THEME_NUM)
+				WHERE 1=1 
 					<include refid="manageMentFrag" />
-					<include refid="searchFrag" />
-					ORDER BY PORT_NUM DESC
+					<include refid="searchFrag" /> 
+				ORDER BY PORT_NUM DESC
 				) A
 			) B
-       		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+       		WHERE RNUM BETWEEN #{startRow} AND #{endRow} AND ORDER_NUM IS NULL
 	</select>
 	
 	
@@ -126,7 +161,8 @@
 							    PORT_READ,    PORT_SCRAP,    PORT_SHARE,
 							    PORT_ADDR,    C.THEME_NUM,    TO_CHAR(PORT_DATE, 'YYYY-MM-DD') PORT_DATE,
 							    PORT_IMG, PORT_SUC, PORT_SNS_NAME,    PORT_SNS_ADDR,    PORT_EXPLAIN,
-			    				PORT_USER_ADDR,    QUESTION_TEL,    QUESTION_SNS,    QUESTION_MAP, (SELECT COUNT(*) FROM PORTLIKE D WHERE D.PORT_NUM=C.PORT_NUM GROUP BY C.PORT_NUM) PORT_LIKE,
+			    				PORT_USER_ADDR,    QUESTION_TEL,    QUESTION_SNS,    QUESTION_MAP,  (SELECT COUNT(*) FROM PORTLIKE D WHERE D.PORT_NUM=C.PORT_NUM GROUP BY C.PORT_NUM) PORT_LIKE,
+							    <include refid="portLike" />
 							    D.THEME_NAME, D.THEME_IMG
 					FROM PORTFOLIO C LEFT OUTER JOIN THEME D ON (C.THEME_NUM = D.THEME_NUM)
 					WHERE PORT_SUC = 'Y'
@@ -167,10 +203,9 @@
 		WHERE PORT_NUM = #{port_num}
 	</update>
 	
-	<update id="deletePortfolio" parameterType="int">
-		DELETE FROM PORTFOLIO
-        WHERE PORT_NUM = #{port_num}
-	</update>
+    <delete id="deletePortfolio" statementType="CALLABLE">
+  	 { CALL #{rowcount,mode=OUT, jdbcType=INTEGER} := DELETEPORTFOLIOFUNC(#{port_num, mode=IN})}
+	</delete>
 	
 	
 	<insert id="insertPort">
@@ -182,23 +217,8 @@
 		    mem_id,
 		    port_name,   
 		    port_date
-		    <if test="port_make != null">
-		    ,port_make
-		    </if>
-		    <if test="port_ban != null">
-		    ,port_ban
-		    </if>
 		    <if test="port_public != null">
 		    ,port_public
-		    </if>
-		    <if test="port_read != null">
-		    ,port_read
-		    </if>
-		    <if test="port_scrap != null">
-		    ,port_scrap
-		    </if>
-		    <if test="port_share != null">
-		    ,port_share
 		    </if>
 		    <if test="port_addr != null">
 		    ,port_addr
@@ -209,13 +229,10 @@
 		    <if test="port_img != null">
 		    ,port_img
 		    </if>
-		    <if test="port_suc != null">
-		    ,port_suc
-		    </if>
 		    <if test="port_sns_name != null">
 		    ,port_sns_name
 		    </if>
-		    <if test="port_explain != null">
+		    <if test="port_sns_addr != null">
 		    ,port_sns_addr
 		    </if>
 		    <if test="port_explain != null">
@@ -236,28 +253,21 @@
 		     <if test="port_tell_number != null">
 		    , port_tell_number
 		    </if>
+		    <if test="ov != null">
+			    <if test="ov.order_num != null">
+			    , order_num
+			    </if>
+		    </if>
+		     <if test="port_requirement != null">
+		    , port_requirement
+		    </if>
 		) VALUES (
 		    #{port_num},
 		    #{mem_id},
 		    #{port_name},
 		    SYSDATE
-		    <if test="port_make != null">
-		    , #{port_make}
-		    </if>
-		    <if test="port_ban != null">
-		    , #{port_ban}
-		    </if>
 		    <if test="port_public != null">
 		    , #{port_public}
-		    </if>
-		    <if test="port_read != null">
-		    , #{port_read}
-		    </if>
-		    <if test="port_scrap != null">
-		    , #{port_scrap}
-		    </if>
-		    <if test="port_share != null">
-		    , #{port_share}
 		    </if>
 		    <if test="port_addr != null">
 		    , #{port_addr}
@@ -267,9 +277,6 @@
 		    </if>
 		    <if test="port_img != null">
 		    , #{port_img}
-		    </if>
-		    <if test="port_suc != null">
-		    , #{port_suc}
 		    </if>
 		    <if test="port_sns_name != null">
 		    , #{port_sns_name}
@@ -295,45 +302,25 @@
 		    <if test="port_tell_number != null">
 		    , #{port_tell_number}
 		    </if>
+		    <if test="ov != null">
+			    <if test="ov.order_num != null">
+			    , #{ov.order_num}
+			    </if>
+		    </if>
+		     <if test="port_requirement != null">
+		    , #{port_requirement}
+		    </if>
 		)
 	</insert>
 	
 	<update id="updatePort">
 		UPDATE PORTFOLIO
 		SET 
-		    <if test="port_name != null">
 		    PORT_NAME = #{port_name},
-		    </if>
-		    <if test="port_make != null">
-		    PORT_MAKE = #{port_make},
-		    </if>
-		    <if test="port_make != null">
-		    PORT_MAKE = #{port_make},
-		    </if>
-		    <if test="port_ban != null">
-		    PORT_BAN = #{port_ban},
-		    </if>
-		    <if test="port_public != null">
 		    PORT_PUBLIC = #{port_public},
-		    </if>
-		    <if test="port_read != null">
-		    PORT_READ = #{port_read},
-		    </if>
-		    <if test="port_scrap != null">
-		    PORT_SCRAP = #{port_scrap},
-		    </if>
-		    <if test="port_share != null">
-		    PORT_SHARE = #{port_share},
-		    </if>
-		    <if test="port_addr != null">
 		    PORT_ADDR = #{port_addr},
-		    </if>
-		    PORT_DATE = SYSDATE,
 		    <if test="port_img != null">
 		    PORT_IMG = #{port_img},
-		    </if>
-		    <if test="port_suc != null">
-		    PORT_SUC = #{port_suc},
 		    </if>
 		    <if test="port_sns_name != null">
 		    PORT_SNS_NAME = #{port_sns_name},
@@ -357,8 +344,9 @@
 		    QUESTION_MAP = #{question_map},
 		    </if>
 		    <if test="port_tell_number != null">
-		    port_tell_number = #{port_tell_number}
+		    PORT_TELL_NUMBER = #{port_tell_number},
 		    </if>
+		    PORT_DATE = SYSDATE
 		WHERE
 		    PORT_NUM = #{port_num}
 	</update>
@@ -367,5 +355,12 @@
 	SELECT COUNT(*)
 	FROM MEMBER M INNER JOIN PORTFOLIO P ON (M.MEM_ID = P.MEM_ID)
 	WHERE M.MEM_ID = #{mem_id}
+	</select>
+	
+	<select id="checkMemberShip" resultType="int">
+	SELECT COUNT(*)
+	FROM MEMBER
+	WHERE MEM_ID = #{mem_id}
+	AND MEM_MEMBERSHIP > 0
 	</select>
 </mapper>

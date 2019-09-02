@@ -31,6 +31,13 @@ public interface IPortfolioService {
 	public List<PortfolioVO> retrievePortList(PagingVO<PortfolioVO> pagingVO);
 	
 	/**
+	 * 포트폴리오 목록 조회
+	 * @param pagingVO
+	 * @return
+	 */
+	public List<PortfolioVO> retrieveMyPortList(PagingVO<PortfolioVO> pagingVO);
+	
+	/**
 	 * 성공한 포트폴리오 목록 수 조회
 	 * @param pagingVO
 	 * @return
@@ -102,4 +109,13 @@ public interface IPortfolioService {
 	public ServiceResult portPublicSetting(PortfolioVO portVO);
 
 	public int checkPort(String mem_id);
+	
+	public int checkMemberShip(String mem_id);
+
+
+	public ServiceResult updatePort(PortfolioVO port);
+
+
+	public ServiceResult createPortAndOrder(PortfolioVO pv);
+
 }

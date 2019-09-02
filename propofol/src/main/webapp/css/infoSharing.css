@@ -1,0 +1,135 @@
+@charset "UTF-8";
+.webzineList{
+	margin-bottom: 20px;	
+}
+
+.webzineList > ul > li {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    padding: 30px;
+    border-bottom: 1px solid #ddd;
+}
+
+.bo_notice {
+    background: #fcf9f3 !important;
+}
+
+.webzineList > ul > li .bo_tit {
+    display: block;
+    vertical-align: middle;
+}
+
+.bo_tit {
+    display: block;
+    color: #000;
+    font-weight: bold;
+}
+
+.webzineList > ul > li .list_img {
+    display: block;
+    float: left;
+    margin: 0 15px 0 0;
+    width: 20%;
+    max-width: 130px;
+    overflow: hidden;
+}
+
+.msg_sound_only, .sound_only {
+    display: inline-block !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 0;
+    line-height: 0;
+    border: 0 !important;
+    overflow: hidden !important;
+}
+
+.webzineList > ul > li .list_img img {
+    display: block;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+	width: 120px;
+    height: 120px;
+}
+
+.webzineList > ul > li.bo_notice .bo_tit .notice_icon {
+    text-align: center;
+    vertical-align: middle;
+    color: #fff;
+    font-size: 14px;
+    height: 25px;
+}
+
+.bo_notice .notice_icon {
+    display: inline-block;
+    background: #990000;
+    width: 25px;
+    line-height: 25px;
+    border-radius: 5px;
+    font-weight: normal;
+    color: #fff;
+}
+
+.fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.webzineList > ul > li .bo_tit strong {
+    font-size: 20px;
+    vertical-align: middle;
+    letter-spacing: -0.03em;
+    color: #000;
+    padding-bottom: 4px;
+}
+
+.webzineList > ul > li .bo_tit em {
+    display: block;
+    padding-top: 10px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 1.4em;
+    color: #999;
+}
+
+.webzineList > ul > li > u {
+    display: block;
+    color: #ddd;
+    font-size: 11px;
+    margin-top: 10px;
+}
+
+.webzineList > ul > li > u > span:first-child {
+    padding-left: 0px;
+}
+
+.webzineList > ul > li > u > span {
+    display: inline-block;
+    padding-right: 10px;
+    color: #999;
+}
+
+.webzineList > ul > li > u > span {
+    display: inline-block;
+    padding-right: 10px;
+    color: #999;
+}
+
+.webzineList > ul > li > u > span > i {
+    margin-left: 8px;
+}
+
+.sv_member {
+    color: #333;
+}

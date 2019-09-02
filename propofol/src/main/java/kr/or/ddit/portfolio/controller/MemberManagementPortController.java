@@ -29,43 +29,22 @@ public class MemberManagementPortController {
 	@GetMapping("myPortList")
 	public PagingVO<PortfolioVO> myPortList(
 			@RequestParam(name = "page", required = false, defaultValue = "1") int currentPage,
-			@RequestParam(required = false) String pf_searchType,
-			@RequestParam(required = false) String pf_searchWord,
 			HttpSession session) {
 		PagingVO<PortfolioVO> pagingVO = new PagingVO<PortfolioVO>(6, 5);
 		MemberVO memberVO = new MemberVO();
 		memberVO = (MemberVO) session.getAttribute("authMember");
 		
 		pagingVO.setCurrentPage(currentPage);
-		pagingVO.setSearchType(pf_searchType);
-		pagingVO.setSearchWord(pf_searchWord);
 		pagingVO.setManageMentType("member");
 		pagingVO.setManageMentId(memberVO.getMem_id());
 
 		long totalRecord = service.retrievePortCount(pagingVO);
 		pagingVO.setTotalRecord(totalRecord);
 
-		List<PortfolioVO> portfolioList = service.retrievePortList(pagingVO);
+		List<PortfolioVO> portfolioList = service.retrieveMyPortList(pagingVO);
 		pagingVO.setDataList(portfolioList);
 
 		return pagingVO;
-	}
-	
-	@GetMapping("deletePort")
-	public Map<String, Object> deletePortfolio(
-			@RequestParam(required = true) String delete_num
-	) {
-		ServiceResult result = service.deletePort(Integer.parseInt(delete_num));
-		Map<String, Object> resultMap = new HashMap<>();
-		if(result.equals(ServiceResult.OK)) {
-			resultMap.put("success", true);
-			resultMap.put("message", "삭제성공");
-		}else {
-			resultMap.put("success", false);
-			resultMap.put("message", "삭제실패");
-		}
-		
-		return resultMap;
 	}
 	
 	@GetMapping("updatePort")

@@ -5,7 +5,7 @@
 }
 
 #pageView .pageContent {
-	width: 125px;
+	width: 200px;
 	height: 200px;
 	float: left;
 	padding: 15px;
@@ -117,7 +117,7 @@
 .input-name {
 	float: left;
 	font-size: 14px;
-	width: 70%;
+    width: 85%;
 	position: relative;
 	display: inline-block;
 	overflow: hidden;

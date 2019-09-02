@@ -54,7 +54,7 @@
 					let read_B = qna.customer_read == 'Y' ? "badge badge-success" : "badge badge-secondary";
 					let li = $("<li>").prop({"class" : "listTblTr listTblTd"})
 									  .append(
-											$("<div>").prop({"class" : "InlineN td_num", "style":"padding-right:15px;"})
+											$("<div>").prop({"class" : "InlineN td_num", "style":"padding-right:15px;width: 100px;"})
 													  .append($("<span>").prop({"class":(pass_B)})
 								   	    				    	   		 .text(pass)).append(qna.rnum),
 											$("<div>").prop({"class" : "td_sub", "style":"width: 75%;"}).append(
@@ -115,7 +115,7 @@
 			<ul>
 				<li class="listTblTr listTblTh">
 					<div style="width: 6%;" class="InlineN">번호</div>
-					<div style="width: 50%;" class="InlineN">제목</div>
+					<div style="width: 60%;" class="InlineN">제목</div>
 					<div style="width: 5%;" class="InlineN">작성자</div>
 					<div style="width: 8%;" class="Inlinev">날짜</div>
 				</li>
@@ -125,7 +125,7 @@
 				<c:if test="${not empty qnaList}">
 					<c:forEach var="qna" items="${qnaList}">
 						<li class="listTblTr listTblTd" >
-							<div class="InlineN td_num" style="padding-right:15px;">
+							<div class="InlineN td_num" style="padding-right:15px; width: 100px;">
 								<c:if test="${not empty qna.customer_pass}">
 									<span class="badge badge-secondary">비밀글</span>
 								</c:if>

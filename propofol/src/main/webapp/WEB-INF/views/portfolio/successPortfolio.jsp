@@ -2,8 +2,15 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!-- 좋아요 폼 -->
-<form method="post" id="likeForm" action="<c:url value='/portfolio/like'/>">
-	<input type="hidden" name="port_num" />
+<form method="post" id="likeForm" action="${cPath}/sucPortfolio">
+	<input name="port_num" type="hidden" />
+	<input name="mem_id" type="hidden" value="${sessionScope.authMember.mem_id}" />
+</form>
+
+<form method="post" id="deleteForm" action="${cPath}/sucPortfolio">
+	<input type="hidden" name="_method" value="delete" />
+	<input name="port_num" type="hidden" />
+	<input name="mem_id" type="hidden" value="${sessionScope.authMember.mem_id}" />
 </form>
 
 <script>
@@ -16,6 +23,9 @@
 	function successPfList(resp){
 		  var pf_liTags = [];
 		  $(resp.dataList).each(function(idx, port){
+			  	var like_num = port.like_num == 0 ? "좋아요" : "좋아요 취소";
+				var like_func = port.like_num == 0 ? "like("+port.port_num+")" : "deleteLike("+port.port_num+")";
+				var heart = port.like_num == 0 ? "fa fa-heart" : "fa fa-heart-o";
 		     let li = $("<li>").prop({"class" : "pf_gall_li col-gn-3 gallWST"})
 		                 .append(
 		                     $("<div>").prop({"class" : "pf_gall_box"}).append(
@@ -57,10 +67,10 @@
 				                    			$("<span>").text(port.port_name),
 				                    			$("<br>"),
 				                    			$("<button>").prop({"type" : "button", "class" : "btn btn-light", "id":"likeBtn" + port.port_num + ""})
-		    	                    							.attr({"onclick" : "like("+port.port_num+")"})
+				                    							.attr({"onclick" : like_func})
 				                    						 .append(
-				                    					$("<i>").prop({"class" : "fa fa-heart-o"})
-				                    							.text("좋아요")	
+				                    					$("<i>").prop({"class" : heart})
+				                    							.text(like_num)	
 				                    			)
 			                    		) // </span>
 			                    	) // </div>
@@ -75,7 +85,7 @@
 	
 	function like(port_num){
 		var mem_id = $("#member_id").val();
-		var likeBtn=$("#likeBtn"+port_num+"");  //수정버튼
+		var likeBtn=$("#likeBtn"+port_num+""); 
 			if(!mem_id) {
 				var check = confirm("로그인 후 이용 가능합니다");
 				if(check){
@@ -86,6 +96,22 @@
 			}else{
 				$("[name=port_num]", "#likeForm").val(port_num);
 			    $("#likeForm").submit();
+			}
+	 };
+	 
+	function deleteLike(port_num){
+		var mem_id = $("#member_id").val();
+		var likeBtn=$("#likeBtn"+port_num+""); 
+			if(!mem_id) {
+				var check = confirm("로그인 후 이용 가능합니다");
+				if(check){
+					$("#myModal").modal("show");					
+				}else{
+					return;
+				}
+			}else{
+				$("[name=port_num]", "#deleteForm").val(port_num);
+			    $("#deleteForm").submit();
 			}
 	 };
 	
@@ -129,12 +155,16 @@
         pf_searchBth.on("click", function(){
         	var pf_searchType = $("#pf_searchType");
     		var pf_searchWord = $("#pf_searchWord");
+    		var mem_id = $("#mem_id");
     		pf_searchForm.find("input[name='pf_searchType']").val(pf_searchType.val());
     		pf_searchForm.find("input[name='pf_searchWord']").val(pf_searchWord.val());
+    		pf_searchForm.find("input[name='mem_id']").val(mem_id.val());
     		pf_searchForm.submit();
         })
         
-        var likeForm = $("#likeForm"); //댓글 삭제 폼
+        var likeForm = $("#likeForm"); 
+        var deleteForm = $("#deleteForm"); 
+        
     	var commonHandler = function(event){
    	       var action = $(this).attr("action");
    	       var method = $(this).attr("method");
@@ -145,7 +175,6 @@
    	          method : method,
    	          dataType : "json",
    	          success : function(resp) {
-				alert(resp.message);
 				pf_searchForm.submit();
    	          },
    	          error : function(errorResp) {
@@ -156,7 +185,7 @@
    	       return false;
    	    } // commonHandler end
     	likeForm.on("submit", commonHandler); 
-   	    
+    	deleteForm.on("submit", commonHandler); 
 	})
 </script>
 
@@ -213,6 +242,4 @@
 		<input type="hidden" name="pf_searchWord" value="${pagingVO.searchWord}" />
 		<input type="hidden" name="page" />
 	</form>
-	
-	
 </div>

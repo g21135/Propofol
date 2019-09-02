@@ -22,6 +22,21 @@ public class OrderServiceImpl implements IOrderService {
 	}
 
 	@Override
+	public List<OrderTbVO> retrieveTypeOrderList(OrderTbVO orderTbVO) {
+		return dao.selectTypeOrderList(orderTbVO);
+	}
+	
+	@Override
+	public List<OrderTbVO> retrieveMonthOrderList(OrderTbVO orderTbVO) {
+		return dao.selectMonthOrderList(orderTbVO);
+	}
+	
+	@Override
+	public List<OrderTbVO> retrieveManagerOrderList(OrderTbVO orderTbVO) {
+		return dao.selectManagerOrderList(orderTbVO);
+	}
+	
+	@Override
 	public List<OrderTbVO> retrieveOrderList(PagingVO<OrderTbVO> pagingVO) {
 		return dao.selectOrderList(pagingVO);
 	}
@@ -66,5 +81,4 @@ public class OrderServiceImpl implements IOrderService {
 		}
 		return result;
 	}
-
 }

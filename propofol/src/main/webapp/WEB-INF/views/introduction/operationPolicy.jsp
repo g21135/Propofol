@@ -538,7 +538,7 @@ font: caption;
                 </div>
             </div>
         </div>
-        <div id="floatMenu">
+        <div id="floatMenu" style="top: 747px;">
 		<input class="imgBtn" type="button" onClick="location.href='#'" style="background: url('${cPath}/img/introduction/top.jpg')" />
 		</div>
             </div>

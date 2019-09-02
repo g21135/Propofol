@@ -60,7 +60,7 @@
 	font-size: 16px;
 }
 
-#configSapn {
+#configSpan {
 	color: gray;
 	float: left;
 	border: 1px solid gray;
@@ -118,4 +118,15 @@
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
+}
+
+#attachSpan, #requireSpan{
+	color: gray;
+	float: left;
+	border: 1px solid gray;
+	border-radius: 25px;
+	padding: 4px;
+	margin-top: 10px;
+	margin-left: 20px;
+	cursor: pointer;
 }

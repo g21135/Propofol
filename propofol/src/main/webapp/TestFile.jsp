@@ -1,111 +1,82 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-   pageEncoding="UTF-8"%>
-<link rel="stylesheet" href="https://uicdn.toast.com/tui-grid/latest/tui-grid.css" />
-<script src="https://uicdn.toast.com/tui-grid/latest/tui-grid.js"></script>
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
 
-<div id="grid"></div>
+<title>Insert title here</title>
 <script>
-   const gridData = [ {
-      id : '10012',
-      city : 'Seoul',
-      country : 'South Korea'
-   }, {
-      id : '10013',
-      city : 'Tokyo',
-      country : 'Japan'
-   }, {
-      id : '10014',
-      city : 'London',
-      country : 'England'
-   }, {
-      id : '10015',
-      city : 'Ljubljana',
-      country : 'Slovenia'
-   }, {
-      id : '10016',
-      city : 'Reykjavik',
-      country : 'Iceland'
-   } ];
-   
-   class CustomTextEditor {
-      constructor(props) {
-         const el = document.createElement('input');
-         const { maxLength } = props.columnInfo.editor.options;
-         el.type = 'text';
-         el.maxLength = maxLength;
-         el.value = String(props.value);
-
-         this.el = el;
-      }
-
-      getElement() {
-         return this.el;
-      }
-
-      getValue() {
-         return this.el.value;
-      }
-
-      mounted() {
-         this.el.select();
-      }
-   }
-
-  const grid = new tui.Grid({
-      el: document.getElementById('grid'),
-      scrollX: false,
-      scrollY: false,
-      columns: [
-         {
-            header: 'Name',
-            name: 'id',
-            onBeforeChange(ev){
-               console.log('Before change:' + ev);
-               ev.stop();
-            },
-            onAfterChange(ev){
-               console.log('After change:' + ev);
-            },
-            editor: 'text'
-         },
-         {
-            header: 'CITY',
-            name: 'city',
-            onBeforeChange(ev){
-               console.log('Before change:' + ev);
-            },
-            onAfterChange(ev){
-               console.log('After change:' + ev);
-            },
-            editor: {
-               type: CustomTextEditor,
-               options: {
-                  maxLength: 10
-               }
-            }
-         },
-         {
-            header: 'COUNTRY',
-            name: 'country',
-            onBeforeChange(ev){
-               console.log('Before change:' + ev);
-            },
-            onAfterChange(ev){
-               console.log('After change:' + ev);
-            },
-            formatter: 'listItemText',
-            editor: {
-               type: 'select',
-               options: {
-                  listItems: [
-                     { text: 'Deluxe', value: '1' },
-                     { text: 'EP', value: '2' },
-                     { text: 'Single', value: '3' }
-                  ]
-               }
-            }
-         }
-      ]
-  });
-  grid.resetData(gridData);
+$(function(){
+	
+	var pptGo = $('#pptGo');
+	
+	$(":button").on('click', function(e) {
+// 		//캡쳐
+// 		html2canvas(e.target.parentElement).then(function(canvas) {
+// 			document.body.appendChild(canvas)
+// 		});
+		
+		//이미지테그만들기
+		html2canvas(e.target.parentElement).then(function(canvas) {
+// 			$('body').append('<img src="' + canvas.toDataURL("image/jpeg") + '"/>');
+			var blob = canvas.toDataURL("image/jpeg");
+			pptData = $("#pptData").val(blob);
+			pptGo.submit();
+		});
+		
+		$("#pptGo").on('submit', function(){
+			$.ajax({
+				url : "${cPath}/made",
+				data : pptData,
+				method : "post",
+				dataType : "json",
+				success : function(resp){
+				}
+			});
+		})
+		
+// 		//파일저장
+// 		html2canvas(e.target.parentElement).then(function(canvas) {
+// 			if (navigator.msSaveBlob) {
+// 				var blob = canvas.msToBlob();
+// 				return navigator.msSaveBlob(blob, '파일명.jpg');
+// 			} else {
+// 				var el = document.getElementById("target");
+// 				el.href = canvas.toDataURL("image/jpeg");
+// 				el.download = '파일명.jpg';
+// 				el.click();
+// 			}
+// 		});
+	});
+})
 </script>
+
+</head>
+<body>
+<form id="pptGo" method="post" enctype="multipart/form-data" >
+	<table>
+		<tr>
+			<td>사진</td>
+			<td>이름</td>
+		</tr>
+		<tr>
+			<td><img src="${cPath}/images/솔지1.jpg"></td>
+			<td>혁준S2솔지</td>
+		</tr>
+		<tr>
+			<td><img src="${cPath}/images/iu.jpg"></td>
+			<td>승태S2아이유</td>
+		</tr>
+	</table>
+	<input type="button" value="히융" />
+	<input type="hidden" name="pptData" id="pptData"/>
+</form>
+
+</body>
+</html>

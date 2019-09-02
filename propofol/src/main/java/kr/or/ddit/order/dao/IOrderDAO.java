@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.vo.OrderTbVO;
 import kr.or.ddit.vo.PagingVO;
 
@@ -16,6 +15,27 @@ public interface IOrderDAO {
 	 * @return
 	 */
 	public int selectOrderListCount(PagingVO<OrderTbVO> pagingVO);
+	
+	/**
+	 * 차트 타입 목록 조회
+	 * @param OrderTbVO
+	 * @return
+	 */
+	public List<OrderTbVO> selectTypeOrderList(OrderTbVO orderTbVO);
+	
+	/**
+	 * 차트 월별 목록 조회
+	 * @param OrderTbVO
+	 * @return
+	 */
+	public List<OrderTbVO> selectMonthOrderList(OrderTbVO orderTbVO);
+	
+	/**
+	 * 차트 년도 목록 조회
+	 * @param OrderTbVO
+	 * @return
+	 */
+	public List<OrderTbVO> selectManagerOrderList(OrderTbVO orderTbVO);
 	
 	/**
 	 * 주문 목록 조회

@@ -23,7 +23,7 @@
 				</a>
 			</li>
 			<li class="snb2d snb2d_bo_tablegallery active show">
-				<a hr.	ef="<c:url value='/find/findMember/userPw'/>" target="_self">
+				<a href="<c:url value='/find/findMember/userPw'/>" target="_self">
 					<b>
 						<i class="fa fa-angle-right"></i>
 						비밀번호 찾기

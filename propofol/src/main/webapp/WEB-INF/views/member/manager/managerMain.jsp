@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
 <div id="notice_top">
 	<div id="notice_List_total">
 		<div class="listTbl">
@@ -10,7 +9,8 @@
 					<div class="InlineN" style="width: 90px">이름</div>
 					<div class="InlineN" style="width: 400px">프로필</div>
 					<div class="InlineN" style="width: 90px">아이디</div>
-					<div class="Inlinev" style="width: 500px">이메일</div>
+					<div class="Inlinev" style="width: 390px">이메일</div>
+					<div class="Inlinev" style="width: 110px">멤버쉽</div>
 					<div class="Inlinev" style="width: 80px">회원등급</div>
 				</li>
 			</ul>
@@ -19,6 +19,17 @@
 				<c:forEach var="memList" items="${memberList.dataList}">
 					<li class="listTblTr listTblTd spanParent">
 					     <div class="InlineN" style="width: 90px">
+					     <c:choose>
+						     <c:when test="${memList.mem_membership eq 30}">
+							     <i class="fas fa-crown" style="color : silver; font-size: 1.3em"></i>
+						     </c:when>
+						     <c:when test="${memList.mem_membership eq 90}">
+							     <i class="fas fa-crown" style="color : gold; font-size: 1.3em"></i>
+						     </c:when>
+						     <c:when test="${memList.mem_membership eq 180}">
+							     <i class="fas fa-gem" style="color : #ffc0cb; font-size: 1.3em"></i>
+						     </c:when>
+					     </c:choose>
 					     	<span class="mng_bo_cate_link">
 								${memList.mem_name }
 							</span>
@@ -82,9 +93,27 @@
 							  	${memList.mem_id}
 							  </span>
 						  </div>
-						  <div class="InlineN" style="width: 500px">
+						  <div class="InlineN" style="width: 390px">
 							  <span class="mng_bo_cate_link">
 								${memList.mem_mail}
+							  </span>
+						  </div>
+						  <div class="InlineN" style="width: 110px">
+							  <span class="mng_bo_cate_link">
+							  	<c:choose>
+							  		<c:when test="${memList.mem_membership eq 30}">
+							  			Silver
+							  		</c:when>
+							  		<c:when test="${memList.mem_membership eq 90}">
+							  			Gold
+							  		</c:when>
+							  		<c:when test="${memList.mem_membership eq 180}">
+							  			Diamond
+							  		</c:when>
+							  		<c:otherwise>
+							  			No MemberShip
+							  		</c:otherwise>
+							  	</c:choose>
 							  </span>
 						  </div>
 						  <div class="InlineN" style="width: 80px">
@@ -151,7 +180,6 @@ var mem_searchBth = $('#mem_searchBth');
 mem_searchBth.on('click', function(){
 	var pf_searchType = $("#searchType");
 	var pf_searchWord = $("#pf_searchWord");
-	console.log(pf_searchType.val());
 	mem_searchForm.find("input[name='pf_searchType']").val(pf_searchType.val());
 	mem_searchForm.find("input[name='pf_searchWord']").val(pf_searchWord.val());
 	mem_searchForm.submit();

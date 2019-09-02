@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import kr.or.ddit.common.InsertGroup;
 import kr.or.ddit.common.UpdateGroup;
 import kr.or.ddit.enumpkg.ServiceResult;
-import kr.or.ddit.post.dao.IPostDAO;
 import kr.or.ddit.post.service.IPostService;
 import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.PagingVO;
@@ -31,9 +30,6 @@ import kr.or.ddit.vo.PostVO;
 @Controller
 @RequestMapping(value="/freeBoards")
 public class FreeBoardController {
- 
-	@Inject
-	IPostDAO dao;
 	@Inject
 	IPostService service;
 	

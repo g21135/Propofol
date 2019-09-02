@@ -108,6 +108,7 @@ $.ajax({
 })
 })
 
+Inquiry
 
 //    동영상 반응형 처리
 //   $(window).resize(function(){resizeYoutube();});

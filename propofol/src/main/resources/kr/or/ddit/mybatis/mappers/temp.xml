@@ -16,29 +16,16 @@
 			TEMP_FUNC,
 			#{port_num},
 			#{temp.temp_menu},
-			#{temp.page_img},
-			#{temp.temp_page}
+			#{temp.page_img,jdbcType=CLOB},
+			#{temp.temp_page,jdbcType=CLOB}
 			)
 		</foreach>
 		SELECT *
 		FROM DUAL
 	</insert>
 
-	<update id="update">
-			UPDATE TEMP
-			SET
-			TEMP_MENU = #{temp_menu},
-			TEMP_PAGE = #{temp_page},
-			PAGE_IMG = #{page_img}
-			WHERE
-			TEMP_NUM = #{temp_num}
-	</update>
-	
-	<select id="select" resultType="int">
-		SELECT 
-		 	TEMP_NUM
-		FROM TEMP
-		WHERE PORT_NUM = #{port_num}
-		ORDER BY 1 
-	</select>
+	<delete id="delete">
+		DELETE FROM TEMP 
+		WHERE PORT_NUM = #{port_num}	
+	</delete>
 </mapper>

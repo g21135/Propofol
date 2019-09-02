@@ -15,6 +15,27 @@ public interface IOrderService {
 	public int retrieveOrderCount(PagingVO<OrderTbVO> pagingVO);
 	
 	/**
+	 * 주문 타입 목록 조회
+	 * @param OrderTbVO
+	 * @return
+	 */
+	public List<OrderTbVO> retrieveTypeOrderList(OrderTbVO orderTbVO);
+	
+	/**
+	 * 주문 월별 목록 조회
+	 * @param OrderTbVO
+	 * @return
+	 */
+	public List<OrderTbVO> retrieveMonthOrderList(OrderTbVO orderTbVO);
+	
+	/**
+	 * 주문 목록 조회
+	 * @param OrderTbVO
+	 * @return
+	 */
+	public List<OrderTbVO> retrieveManagerOrderList(OrderTbVO orderTbVO);
+	
+	/**
 	 * 주문 목록 조회
 	 * @param pagingVO
 	 * @return

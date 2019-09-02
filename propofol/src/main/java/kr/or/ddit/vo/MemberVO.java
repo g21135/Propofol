@@ -38,6 +38,12 @@ public class MemberVO {
 	//등급 명 받기 위한 임시 프로퍼티
 	private String gr_name;
 	
+	//프리미엄 회원권
+	private Date start_memship;
+	private Date end_memship;
+	private Integer mem_membership;
+	
+	
 	private String mem_role;
 	private MultipartFile mem_img;
 	

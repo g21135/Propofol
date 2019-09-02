@@ -18,6 +18,7 @@ import com.cksource.ckfinder.event.GetConfigForRequestEvent;
 import com.cksource.ckfinder.listener.Listener;
 
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PortfolioVO;
 
 /**
  * A listener that dynamically changes the location of user files on application
@@ -39,14 +40,19 @@ public class GetConfigForRequestListener implements Listener<GetConfigForRequest
 			HttpSession session = event.getRequest().getSession();
 			
 			Map<String, Config.Backend> backendConfigs = config.getBackends();
+			String mem_id = ((MemberVO) session.getAttribute("authMember")).getMem_id();
 			for (Config.Backend backendConfig : backendConfigs.values()) {
 				if (backendConfig.getAdapter().equals("local")) {
 					String originalRoot = backendConfig.getRoot();
 					String newRoot = originalRoot.replace("{user.dir}", userDir);
-					newRoot = newRoot.replace("{user.id}", ((MemberVO) session.getAttribute("authMember")).getMem_id());
+					if("root".equals(mem_id)) {
+						newRoot = newRoot.replace("{user.id}", (String)session.getAttribute("make_id"));
+					}else {
+						newRoot = newRoot.replace("{user.id}", mem_id);
+					}
 
 					String originalBaseUrl = backendConfig.getBaseUrl();
-					String newBaseUrl = originalBaseUrl.replace("{user.id}", ((MemberVO) session.getAttribute("authMember")).getMem_id());
+					String newBaseUrl = originalBaseUrl.replace("{user.id}", mem_id);
 					backendConfig.setRoot(newRoot);
 					backendConfig.setBaseUrl(newBaseUrl);
 

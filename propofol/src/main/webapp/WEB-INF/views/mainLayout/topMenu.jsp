@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 
 <!--/ Nav Star /-->
 <nav class="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">
@@ -31,7 +32,7 @@
            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
              <a class="dropdown-item" href="<c:url value='/portfolioList'/>">열람</a>
 	             <a id="makeBtn" class="dropdown-item" href='#'>제작</a>
-             <a class="dropdown-item" href="">주문제작</a>
+             <a id="topOrderBtn" class="dropdown-item" href="" data-toggle="modal" data-target="#orderFormModal">주문제작</a>
            </div>
        </li>
        <li class="nav-item dropdown">
@@ -40,7 +41,7 @@
            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
              <a class="dropdown-item" href="<c:url value='/jobnews'/>">취업뉴스</a>
              <a class="dropdown-item" href="<c:url value='/recruit'/>">채용공고</a>
-             <a class="dropdown-item" href="<c:url value='/PayList'/>">정보공유</a>
+             <a class="dropdown-item" href="<c:url value='/infoSharing'/>">정보공유</a>
              <a class="dropdown-item" href="<c:url value='/freeBoards'/>">자유게시판</a>
            </div>
        </li>
@@ -179,7 +180,6 @@
 									style="transform:scale(0.85);transform-origin:0 0;margin-top:4px"
 									>
 								</div>
-								<button id="test" type="button">확인</button>
 				                <div class="submit-wrap">
 				                	<input style="margin-bottom: 15px" id="cpactha" type="button" value="Sign Up" class="submit more" >
 					            </div> 
@@ -282,7 +282,374 @@
 <form id="alarmDelForm" action="${cpath }/alarm/remove" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="notice_num">
 </form>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3e8d766575fccfc436ac9842183cea79&libraries=services"></script>
+<link href="${cPath}/css/makePortfolio/top.css" rel="stylesheet">
+<link href="${cPath}/css/portfolio/myPort.css" rel="stylesheet">
+
+<c:if test="${not empty sessionScope.authMember}">
+
+<!-- ckeditor / ckfinder -->
+<script src="<c:url value='/js/ckeditor/ckeditor.js'/>"></script>
+<script src="<c:url value='/js/ckfinder/ckfinder.js'/>"></script>
+<!-- Modal -->
+<form id="orderForm" action="${cPath}/makePortfolio/order" method="post" encType="multipart/form-data" >
+
+	<div class="modal fade" id="orderFormModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" style="width: 705px; top: -73px; overflow: auto;">
+	    <div class="modal-content">
+	   	  <input type="hidden" name="question_tel">
+	      <input type="hidden" name="question_sns">
+		  <input type="hidden" name="question_map">
+	      <div class="modal-body">
+	      	 <div id="orderTable">
+		      <table>
+					<tr>
+						<td class="config-td1">포트폴리오 이름</td>
+						<td>
+							<input class="form-control" type="text" name="port_name" style="width: 90%; display: inline-block;">
+						</td>
+						<td rowspan="5">
+								<img id="foo" class="img-rounded" src="${cPath}/img/notImage.png" style="width: 200px; height: 230px; ">	
+						</td>
+					</tr>
+					<tr>
+						<td class="config-td1">주소 설정</td>
+						<td>
+							<span>localhost/portfolio/</span>
+							<input class="form-control" type="text" name="port_addr" style="width: 43%; display: inline-block;" value="${pv.port_addr}"></td>
+					</tr>
+					<tr>
+						<td class="config-td1">공개 설정</td>
+						<td>
+							<label><input type="radio" name="port_public" value="Y"> 공개 </label>
+							<label><input type="radio" name="port_public" value="N" style="margin-left: 25px;"> 비공개 </label>
+						</td>
+					</tr>
+					<tr>
+						<td class="config-td1">포트폴리오 설명</td>
+						<td><textarea class="form-control" name="port_explain" style="resize: none;width:90%;">${pv.port_explain}</textarea></td>
+					</tr>
+					<tr>
+						<td class="config-td1">대표이미지</td>
+						<td><input id="port_image" type="file" name="port_image"></td>
+					</tr>
+						<tr id="content1" style="display: none">
+							<td class="config-td1">전화번호</td>
+							<td><input class="form-control" type="text" name="port_tell_number" style="width:90%" value="${pv.port_tell_number}"></td>
+						</tr>
+						<tr id="content2" style="display: none">
+							<td class="config-td1">SNS 등록</td>
+							<td colspan="2">
+								<select class="form-control" name="port_sns_name" style="height: 35px; width: 110px; display: inline-block;">
+									<option>선택</option>
+									<option value="facebook">Facebook</option>
+									<option value="instagram">Instagram</option>
+								</select>
+								<input class="form-control" id="" type="text" name="port_sns_addr" style="width: 75%;display: inline-block;">
+								
+							</td>
+						</tr>
+						<tr id="content3" style="display: none">
+							<td class="config-td1">위치 등록</td>
+							<td colspan="2">
+							
+								<input class="form-control" id="searchMap" type="text" 
+								style="margin-top: 15px; width: 264px; display: inline-block;">
+								<input class="btn btn-success" id="searchBtn" type="button" value="검색" style="height: 34px;">
+								
+								<div id="map" style="width:100%; height: 300px; margin-top: 10px;"></div>
+							    <div class="hAddr">
+									<span id="centerAddr"></span>
+							    </div>
+								<div id="clickLatlng" style="height: 50px;">
+								  <div id="resultMap" class="bAddr"></div>
+								</div>
+								<input id="addr" type="hidden" name="port_user_addr">
+							</td>	
+						</tr>
+				</table>
+				</div>
+				 <div id="orderCK" style="display: none">
+				      <span style="margin-left: 13px;  font-size: 18px; font-weight: bold;">
+				   		   첨부파일  <i class="fas fa-folder-plus" style="margin-left: 8px;" ></i>
+				      </span>
+				      <div id="ckfinder-widget">
+				      </div>
+				      <span  style="margin-left: 13px;  font-size: 18px; font-weight: bold;">
+				  		   요구사항  <i class="fas fa-comment-medical" style="margin-left: 8px;"></i>
+		      		  </span>
+				      <textarea name="port_requirement" id="editor">
+				      </textarea>
+	      		</div>
+	      </div>
+	      <div class="modal-footer">
+	        <input id="addOrderForm" class="btn btn-success" value="추가 양식">
+	      	<label for='radio1' class='labelClass'>전화번호<input id="check1"  type="checkbox" ></label>
+			<label for='radio2' class='labelClass'>sns<input id="check2" type="checkbox"></label>
+			<label for='radio3' class='labelClass'>위치<input id="check3" type="checkbox"></label>
+	        <input id="orderBtn" type="submit" class="btn btn-primary" style="display: none" <%-- onclick="location.href='${cPath}/addPayment?price=100&rank=주문제작'" --%>value="결제"/>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</form>
+</c:if>
+
 <script type="text/javascript">
+$("#orderForm").on("submit",function(){
+	let form = $(this)[0];
+	let formData = new FormData(form);
+	
+	let url = $(this).attr("action");
+	let method = $(this).attr("method");
+	let encType = $(this).attr("encType");
+	
+	$.ajax({
+		url : url,
+		method : method,
+		data : formData,
+		encType : encType,
+	    contentType: false,
+		processData: false,
+		dataType : "json",
+		success : function(resp) {
+			if(resp.success){
+				alert("결제가 완료되었습니다.");
+			}else{
+				alert("실패");
+			}
+		},
+		error:function(error){
+			console.log(error);
+		}
+	})
+	return false;
+})
+
+
+$("#addOrderForm").on("click",function(){
+	if($("#orderCK").css("display") == "none"){
+		$("#orderCK").show(300);
+		$("#orderTable").hide(300);
+		$("#orderBtn").show(300);
+		$(".labelClass").hide(300);
+		$(this).val("돌아가기");
+	}else{
+		$("#orderCK").hide(300);
+		$("#orderTable").show(300);
+		$("#orderBtn").hide(300);
+		$(".labelClass").show(300);
+		$(this).val("추가 양식");
+	}
+})
+<c:if test="${not empty sessionScope.authMember and sessionScope.authMember.mem_id ne 'root'}">
+CKFinder.widget( 'ckfinder-widget', {
+	width: '100%',
+    height: "350px"
+});
+
+CKEDITOR.replace( 'editor' ,{
+  	 	height: "350px",
+		extraPlugins: 'font, sourcedialog, widget, widgetselection, clipboard, lineutils, colorbutton, panelbutton',
+	    allowedContent : true
+});
+</c:if>
+
+<c:if test="${empty sessionScope.authMember}">
+$("#topOrderBtn").on("click",function(){
+	alert("로그인을 해주세요");
+	$("#myModal").modal("show");
+})
+</c:if>
+<c:if test="${sessionScope.authMember.mem_id eq 'root'}">
+$("#topOrderBtn").on("click",function(){
+	alert("관리자는 접근 불가");
+	return false;
+})
+</c:if>
+
+function mapfunc(){
+	if(document.getElementById('map') != null){
+    	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    	    mapOption = {
+    	       center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+    	       level: 1 // 지도의 확대 레벨
+    	   };  
+    	// 지도를 생성합니다    
+    	var map = new kakao.maps.Map(mapContainer, mapOption); 
+    	
+    	// 주소-좌표 변환 객체를 생성합니다
+    	var geocoder = new kakao.maps.services.Geocoder();
+     	
+    	var marker = new kakao.maps.Marker(), // 클릭한 위치를 표시할 마커입니다
+    	    infowindow = new kakao.maps.InfoWindow({zindex:1}); // 클릭한 위치에 대한 주소를 표시할 인포윈도우입니다
+    	
+    	// 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
+    	searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+    	
+    	// 지도를 클릭했을 때 클릭 위치 좌표에 대한 주소정보를 표시하도록 이벤트를 등록합니다
+    	kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+    	    searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
+    	        if (status === kakao.maps.services.Status.OK) {
+    	            var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
+    	            detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
+    	            
+    	            var content = '<div class="bAddr">' + detailAddr + '</div>';
+    	          
+    	            // 마커를 클릭한 위치에 표시합니다 
+    	            marker.setPosition(mouseEvent.latLng);
+    	            marker.setMap(map);
+    	
+    	            // 인포윈도우에 클릭한 위치에 대한 상세 주소정보를 표시합니다
+    	            infowindow.setContent(content);
+    	            infowindow.open(map, marker);
+
+    	    		// 클릭한 위도, 경도 정보를 가져옵니다 
+    	    	    var latlng = mouseEvent.latLng; 
+    	    	    
+    	    	    // 마커 위치를 클릭한 위치로 옮깁니다
+    	    	    marker.setPosition(latlng);
+    	    	    
+		            $("#addr").val(result[0].address.address_name);
+		    	    $("#resultMap").html(content); 
+    	        }   
+    	    });
+    	});
+    	
+    	// 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
+    	kakao.maps.event.addListener(map, 'idle', function() {
+    	    searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+    	});
+    	
+    	function searchAddrFromCoords(coords, callback) {
+    	    geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
+    	}
+    	
+    	function searchDetailAddrFromCoords(coords, callback) {
+    	    geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+    	}
+    	
+    	// 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
+    	function displayCenterInfo(result, status) {
+    	    if (status === kakao.maps.services.Status.OK) {
+    	        var infoDiv = document.getElementById('centerAddr');
+    	
+    	        for(var i = 0; i < result.length; i++) {
+    	            if (result[i].region_type === 'H') {
+    	                infoDiv.innerHTML = result[i].address_name;
+    	                break;
+    	            }
+    	        }
+    	    }    
+    	}
+    	
+    	$("#searchBtn").on("click",function(){
+    		var searchText = $("#searchMap").val();
+    		
+    		var ps = new kakao.maps.services.Places(); 
+    		ps.keywordSearch(searchText, placesSearchCB); 
+    	})
+    	
+    	function placesSearchCB (data, status, pagination) {
+    	    if (status === kakao.maps.services.Status.OK) {
+
+    	        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+    	        // LatLngBounds 객체에 좌표를 추가합니다
+    	        var bounds = new kakao.maps.LatLngBounds();
+
+    	        for (var i=0; i<data.length; i++) {
+    	            bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+    	        }       
+
+    	        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+    	        map.setBounds(bounds);
+    	    } 
+    	}
+	}
+}
+$(document).on("click","#check1",function(){
+	
+	var orderForm = $("#orderForm");
+	if($("#content1").css("display") == "none"){
+		$("#content1").show(function(){
+			orderForm.find("[name=question_tel]").val("Y");
+		});
+	}else{
+		$("#content1").hide(function(){
+			orderForm.find("[name=question_tel]").val("N");
+			orderForm.find("[name=port_tell_number]").val("");
+		});
+	}
+})
+$(document).on("click","#check2",function(){
+	var orderForm = $("#orderForm");
+	if($("#content2").css("display") == "none"){
+		$("#content2").show(function(){
+			orderForm.find("[name=port_sns_name] option:eq(0)").prop("selected",true);
+			orderForm.find("[name=question_sns]").val("Y");
+		});
+	}else{
+		$("#content2").hide(function(){
+			orderForm.find("[name=question_sns]").val("N");
+			orderForm.find("[name=port_sns_name]").val("");
+			orderForm.find("[name=port_sns_addr]").val("");
+		});
+	}
+})
+
+$(document).on("click","#check3",function(){
+	var orderForm = $("#orderForm");
+	if($("#content3").css("display") == "none"){
+		$("#content3").show(function(){
+			mapfunc();
+			orderForm.find("[name=question_map]").val("Y");
+		});
+	}else{
+		$("#content3").hide(function(){
+			orderForm.find("[name=question_map]").val("N");
+			orderForm.find("[name=port_user_addr]").val("");
+			orderForm.find("#searchMap").val("");
+			orderForm.find("#resultMap").empty();
+		});
+	}
+})
+
+$("#orderFormModal").on("hide.bs.modal",function(){
+	var orderForm = $("#orderForm");
+	orderForm[0].reset();
+	$("#content1").hide(function(){
+		orderForm.find("[name=question_tel]").val("N");
+		orderForm.find("[name=port_tell_number]").val("");
+	});
+	$("#content2").hide(function(){
+		orderForm.find("[name=question_sns]").val("N");
+		orderForm.find("[name=port_sns_name]").val("");
+		orderForm.find("[name=port_sns_addr]").val("");
+	});
+	$("#content3").hide(function(){
+		orderForm.find("[name=question_map]").val("N");
+		orderForm.find("[name=port_user_addr]").val("");
+		orderForm.find("#searchMap").val("");
+		orderForm.find("#resultMap").empty();
+	});
+});
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $('#foo').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$(document).on("change","#port_image",function() {
+	readURL(this);
+});   
+
+//-----------------------------------------------------
 
 var loginForm = $("#loginForm");
 var joinForm = $("#joinForm");
@@ -303,10 +670,10 @@ $("#makeBtn").on("click",function(){
 		dataType : "json",
 		success : function(resp){
 			if(resp.success){
-				alert("이미 포트폴리오가 존재합니다. 추가 결제가 필요합니다.");
-				location.href = "<c:url value='/PayList'/>"
+					makeModal.modal("show");
 			}else{
-				makeModal.modal("show");
+					alert("이미 포트폴리오가 존재합니다. 추가 결제가 필요합니다.");
+					location.href = "<c:url value='/PayList'/>"
 			}
 		},
 		error : function(){
@@ -662,7 +1029,7 @@ function alarm() {
 		dataType : "json",
 		success : function(resp){
 			var pf_liTags = [];
-			$(resp.alarmList.dataList).each(function(idx, alarm){
+			$(resp.alarmList).each(function(idx, alarm){
 				let result = alarm.notice_read == "Y"? true : false;
 				let li = $("<div>").prop({"class" : "alarm_div_"+ alarm.notice_read }).append(
 					$("<span onclick='alarmBtn("+alarm.notice_num+", \""+alarm.notice_url+"\")'>")
@@ -741,5 +1108,60 @@ alarmDelForm.submit(function(event){
 		}
 	})//ajax end
 });//submit end
+
+ $("#orderBtn").on("click",function(){
+	 
+    var IMP = window.IMP; // 생략가능
+    IMP.init('imp19887480'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+    var msg;
+    
+    IMP.request_pay({
+        pg : 'html5_inicis',
+        pay_method : 'card',
+        merchant_uid : 'merchant_' + new Date().getTime(),
+        name : 'Propofol 추가 결제',
+        amount : 100,
+        buyer_email : '${sessionScope.authMember.mem_mail}',
+        buyer_name : '${sessionScope.authMember.mem_name}',
+        buyer_tel : '${sessionScope.authMember.mem_tel}',
+    }, function(rsp) {
+        if ( rsp.success ) {
+            //[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기
+            jQuery.ajax({
+                url: "/payments/complete", //cross-domain error가 발생하지 않도록 주의해주세요
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    imp_uid : rsp.imp_uid
+                    //기타 필요한 데이터가 있으면 추가 전달
+                }
+            }).done(function(data) {
+                //[2] 서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우
+                if ( everythings_fine ) {
+                    msg = '결제가 완료되었습니다.';
+                    msg += '\n고유ID : ' + rsp.imp_uid;
+                    msg += '\n상점 거래ID : ' + rsp.merchant_uid;
+                    msg += '\결제 금액 : ' + rsp.paid_amount;
+                    msg += '카드 승인번호 : ' + rsp.apply_num;
+                    
+                    alert(msg);
+                } else {
+                    //[3] 아직 제대로 결제가 되지 않았습니다.
+                    //[4] 결제된 금액이 요청한 금액과 달라 결제를 자동취소처리하였습니다.
+                }
+            });
+            //성공시 이동할 페이지
+            msg = '결제가 완료되었습니다.\n결제금액은 : '+rsp.paid_amount+'입니다.';
+            alert(msg);
+            $("#orderForm").submit();
+        } else {
+            msg = '결제에 실패하였습니다.';
+            msg += '에러내용 : ' + rsp.error_msg;
+            //실패시 이동할 페이지
+             alert("주문을 취소하셨습니다.");
+        }
+    })
+ })
+
 </script>   
 

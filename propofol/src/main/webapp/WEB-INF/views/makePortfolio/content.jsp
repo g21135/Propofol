@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-
 <div id="content">
-<img src="${cPath}/img/makePortfolio/contents/basicContent2.jpg" style="position: relative;bottom:-464px;">
+	<img src="${cPath}/img/makePortfolio/contents/basicContent2.jpg" style="position: relative;bottom:-464px;">
 </div>
 
 <script>

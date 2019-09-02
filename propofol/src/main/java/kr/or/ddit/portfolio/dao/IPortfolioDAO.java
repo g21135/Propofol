@@ -25,6 +25,13 @@ public interface IPortfolioDAO {
 	public List<PortfolioVO> selectPortfolioList(PagingVO<PortfolioVO> pagingVO);
 	
 	/**
+	 * 포트폴리오 목록 조회
+	 * @param pagingVO(paging num, theme_num)
+	 * @return
+	 */
+	public List<PortfolioVO> selectMyPortfolioList(PagingVO<PortfolioVO> pagingVO);
+	
+	/**
 	 * 성공포트폴리오 목록 수 조회
 	 * @param pagingVO(paging num, theme_num)
 	 * @return
@@ -95,10 +102,10 @@ public interface IPortfolioDAO {
 
 	/**
 	 * 포트폴리오 삭제
-	 * @param port_num
+	 * @param pv
 	 * @return
 	 */
-	public int deletePortfolio(int port_num);
+	public int deletePortfolio(PortfolioVO pv);
 
 	/**
 	 * 포트폴리오 공개설정 변경
@@ -108,4 +115,6 @@ public interface IPortfolioDAO {
 	public int publicSettingPortfolio(PortfolioVO portVO);
 
 	public int checkPort(String mem_id);
+	
+	public int checkMemberShip(String mem_id);
 }

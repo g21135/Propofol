@@ -25,11 +25,12 @@
 <div id="leftLayoutMenu">
 <ul class="accordion-menu">
   <li>
-    <div class="dropdownlink"><img class="icon" src="${cPath}/img/makePortfolio/leftMenu/text.png">박스
+    <div class="dropdownlink"><i class="icon far fa-square"></i>박스
       <i class="fa fa-chevron-down" aria-hidden="true"></i>
     </div>
     <ul class="submenuItems">
-      <li><a id="boxAdd" href="#">일반형<i class="plusIcon fas fa-plus"></i></a></li>
+      <li><a id="boxAdd1" href="#">고정형<i class="plusIcon fas fa-plus"></i></a></li>
+      <li><a id="boxAdd2" href="#">반응형<i class="plusIcon fas fa-plus"></i></a></li>
     </ul>	
   </li>
 </ul>
@@ -101,9 +102,8 @@
 		})
 	})
 	
-	
 	var idNumber = 1;
-	$("#boxAdd").on("click",function(){
+	function boxAdd(option1, option2){
 		if(!$("#layout").length){
 			return;
 		}
@@ -112,13 +112,13 @@
 		
 		var newBox = $("<div>").prop({"class":"editContainer","id":"edit-content"+idNumber})
 		.append(innerBox)
-		.css({"width":"300px","height":"300px","left":"780px","top":"360px"});
+		.css({"width":option1,"height":option2,"left":"780px","top":"360px"});
 		
 		idNumber = idNumber + 1
 		$("#layout").append(newBox);
 		
 		CKEDITOR.inline(innerBox.attr("id"),{
-			extraPlugins: 'sourcedialog, image2, html5video, widget, widgetselection, clipboard, lineutils, youtube, colorbutton, panelbutton',
+			extraPlugins: 'font ,sourcedialog, image2, html5video, widget, widgetselection, clipboard, lineutils, youtube, colorbutton, panelbutton',
 		    removePlugins: 'image',
 		    filebrowserBrowseUrl: '${cPath}/js/ckfinder/ckfinder.html',
 		    filebrowserUploadUrl: '${cPath}/ckfinder/connector?command=QuickUpload&type=Files',
@@ -126,5 +126,13 @@
 		    youtube_responsive : true,
 		    allowedContent : true
 		})
+	}
+
+	$("#boxAdd1").on("click",function(){
+		boxAdd("300px","300px");
+	})
+	
+	$("#boxAdd2").on("click",function(){
+		boxAdd("auto","auto");
 	})
 </script> 

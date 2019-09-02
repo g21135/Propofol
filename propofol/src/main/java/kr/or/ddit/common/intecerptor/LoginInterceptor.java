@@ -40,14 +40,11 @@ public class LoginInterceptor extends HandlerInterceptorAdapter{
 					return true;
 				}
 			}else {//이전에 생성된 쿠키가 존재하지 않는다.
-//				response.sendRedirect(request.getContextPath() + "/");
-//				response.getWriter().print("{\"page\":\""+request.getContextPath()+"/test\"}");
 				return true;
 			}
 		}
 		return true;
 	}
-
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {

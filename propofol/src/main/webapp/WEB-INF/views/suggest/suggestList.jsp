@@ -55,7 +55,7 @@ function ${pagingVO.funcName}(page) {
 					let read_B = suggest.customer_read == 'Y' ? "badge badge-success" : "badge badge-secondary";
 					let li = $("<li>").prop({"class" : "listTblTr listTblTd"})
 									  .append(
-											$("<div>").prop({"class" : "InlineN td_num"})
+											$("<div>").prop({"class" : "InlineN td_num","style":"padding-right:15px; width: 115px;"})
 													  .html(suggest.rnum),
 											$("<div>").prop({"class" : "td_sub", "style":"width: 75%"}).append(
 											 	    	$("<div>").prop({"class":"no_num"}).append(
@@ -90,7 +90,7 @@ function ${pagingVO.funcName}(page) {
 			<ul>
 				<li class="listTblTr listTblTh">
 					<div style="width: 6%;" class="InlineN">번호</div>
-					<div style="width: 50%;" class="InlineN">제목</div>
+					<div style="width: 66%;" class="InlineN">제목</div>
 					<div style="width: 5%;" class="Inlinev">작성자</div>
 					<div style="width: 8%;" class="Inlinev">날짜</div>
 				</li>
@@ -100,7 +100,7 @@ function ${pagingVO.funcName}(page) {
 				<c:if test="${not empty suggestList}">
 					<c:forEach var="suggest" items="${suggestList}">
 						<li class="listTblTr listTblTd" >
-							<div class="InlineN td_num" style="padding-right:15px;">
+							<div class="InlineN td_num" style="padding-right:15px; width: 115px;">
 								${suggest.rnum}
 							</div>
 							<div class="td_sub" style="width: 75%;">

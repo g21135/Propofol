@@ -30,5 +30,13 @@ public interface ITempDAO {
 	 */
 	public int[] select(int port_num);
 
+	
+	/**
+	 * 삭제
+	 * @param port
+	 * @return 
+	 */
+	public int delete(PortfolioVO port);
+
 		
 }

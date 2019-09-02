@@ -13,7 +13,7 @@ public interface IAlarmService {
 	 * @param pv
 	 * @return
 	 */
-	public List<NoticeVO> retreieveAlarm(PagingVO<NoticeVO> pv);
+	public List<NoticeVO> retreieveAlarm(String mem_id);
 	
 	/**
 	 * 알림 발송

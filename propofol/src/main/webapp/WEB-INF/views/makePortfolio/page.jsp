@@ -25,7 +25,7 @@
 	<script>
 	var contentData = $("<div>").prop({"class":"mainContent"})
 	.css({"width":"100%","height":"100%","background":"white"})
-	.append($("#page${vs.count}"));	
+	.append($("#page${vs.count}").html());	
 	
 	$("#pageView").append(
 			$("<div>").prop({"class":"pageContent"}).append(
@@ -35,7 +35,7 @@
 				$("<span>").prop({"class":"underline-animation"})		
 			),
 			$("<i>").prop({"class":"menuEdit fas fa-cog"}),
-			$("<img>").prop({"class":"makePage","src":"${cPath}${item.page_img}"})
+			$("<img>").prop({"class":"makePage","src":"${item.page_img}"})
 			.data({"content":contentData})
 		)
 	);
@@ -103,7 +103,7 @@ CKEDITOR.disableAutoInline = true;
 </c:if>
 
 addPage.on("click",function(){
-	if($(".pageContent").length >= 10){
+	if($(".pageContent").length >= 8){
 		alert("더 이상 추가할 수 없습니다.");
 		return;
 	}
@@ -172,7 +172,7 @@ $(document).click(function (e) {
 });
 
 pageView.on("click",".pageCopy",function(e){
-	if($(".pageContent").length >= 10){
+	if($(".pageContent").length >= 8){
 		alert("더 이상 추가할 수 없습니다.");
 		return;
 	}
@@ -205,17 +205,19 @@ pageView.on("click",".pageCopy",function(e){
 })
 
 pageView.on("click",".pageDelete",function(e){
+	if($(this).parents("div.pageContent").find(".makePage").css("border").indexOf("none") == -1){//내 이미지 테두리가 있다면
+		var img = $("<img>").prop({"src":"${cPath}/img/makePortfolio/contents/basicContent2.jpg"})
+		.css({"position":"relative","bottom":"-464px"});
+		$("#content").html(img);
+	}
 	$(document).trigger("click");
 	$(this).parents("div.pageContent").remove();
-	var img = $("<img>").prop({"src":"${cPath}/img/makePortfolio/contents/basicContent2.jpg"})
-	.css({"position":"relative","bottom":"-464px"});
-	$("#content").html(img);
 })
 
 pageView.on("click",".makePage",function(){
+	var makePage= $(this);
 	$(".makePage").data("clicked",false);
 	$(this).data("clicked",true);
-	
 	for(name in CKEDITOR.instances)
 	{
 	    CKEDITOR.instances[name].destroy(true);
@@ -242,5 +244,12 @@ pageView.on("click",".makePage",function(){
 		    
 		})
 	});
+	
+	html2canvas(document.getElementById("content")).then(function(canvas) {
+		var clob = canvas.toDataURL("image/jpeg");
+		makePage.data("clob",clob);
+		makePage.attr("src",clob);
+	});
+	
 });
 </script>

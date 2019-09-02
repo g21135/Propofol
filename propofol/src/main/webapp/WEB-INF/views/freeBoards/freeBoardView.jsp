@@ -232,55 +232,55 @@
 	    var pagingArea = $("#pagingArea");
 	    var mem_id = $("#loginMember").val();
 	    var abc = function(event){
-		event.preventDefault();
-		var action = $(this).attr("action");
-		var queryString = $(this).serialize();
-		$.ajax({
-			url : action,
-			data : queryString,
-			dataType : "json",
-			success : function(resp) {
-				let replyList = resp.dataList;
-				var divTags = [];
-				if(replyList && replyList.length > 0){
-				$(replyList).each(function(idx, reply){
-					dispaly = (reply.mem_id == mem_id ? "inline-block;" : "none;");
-                   let div = $("<div>").prop({"id":"maindiv", "style": "border-top:1px solid #dddddd; padding: 10px;"})
-                   					   .append(
-                         $("<div>").prop({"style":"width:65%; display:inline-block;"}).append(
-                        		 													$("<input>").prop({"id":"replyInput"+reply.reply_num+"", 
-                        		 																	   "disabled":" ",
-                        		 																	   "type":"text",
-                        		 																	   "style":"width:95%; border:0px; background:white;",
-                        		 																	   "value":reply.reply_content})),
-                         $("<div>").prop({"style":"width:10%; display:inline-block;"}).text(reply.mem_id),
-                         $("<div>").prop({"style":"width:13%; display:inline-block;"}).text(reply.reply_date), 
-                         $("<div>").prop({"style":"width:11%; display:"+dispaly+""}).append(
-                            $("<button>").prop({"class":"list_btn btn", "id":"updatereplybutton" + reply.reply_num + "","style":"margin-right:5px;"})
-			                            			 .attr({"onclick" : "replyUpdate("+reply.reply_num+")"})
-						                             .text("수정"),
-                            $("<button>").prop({"class":"list_btn btn", "id":"modifyBtn"})
-			                            			 .attr({"onclick" : "replyDelete(" + reply.reply_num + ");"})
-						                             .text("삭제"))
-                      );
-                      divTags.push(div)
-                });
-                listBody.html(divTags);
-             }else{
- 				divTags.push(
-                   $("<div>").prop({"style": "border-top:1px solid #dddddd; padding: 10px;"}).text("댓글 없음.")
-                );
-             }
-			listBody.html(divTags);
-			pagingArea.html(resp.pagingHTMLForBS);
-          },
-          error : function(errorResp) {
-             console.log(errorResp.status + ", "
-                   + errorResp.responseText)
-          }
-       }); // ajax end
-       return false;
-    }; // submit handler end
+			event.preventDefault();
+			var action = $(this).attr("action");
+			var queryString = $(this).serialize();
+			$.ajax({
+				url : action,
+				data : queryString,
+				dataType : "json",
+				success : function(resp) {
+					let replyList = resp.dataList;
+					var divTags = [];
+					if(replyList && replyList.length > 0){
+					$(replyList).each(function(idx, reply){
+						dispaly = (reply.mem_id == mem_id ? "inline-block;" : "none;");
+	                   let div = $("<div>").prop({"id":"maindiv", "style": "border-top:1px solid #dddddd; padding: 10px;"})
+	                   					   .append(
+	                         $("<div>").prop({"style":"width:65%; display:inline-block;"}).append(
+	                        		 													$("<input>").prop({"id":"replyInput"+reply.reply_num+"", 
+	                        		 																	   "disabled":" ",
+	                        		 																	   "type":"text",
+	                        		 																	   "style":"width:95%; border:0px; background:white;",
+	                        		 																	   "value":reply.reply_content})),
+	                         $("<div>").prop({"style":"width:10%; display:inline-block;"}).text(reply.mem_id),
+	                         $("<div>").prop({"style":"width:13%; display:inline-block;"}).text(reply.reply_date), 
+	                         $("<div>").prop({"style":"width:11%; display:"+dispaly+""}).append(
+	                            $("<button>").prop({"class":"list_btn btn", "id":"updatereplybutton" + reply.reply_num + "","style":"margin-right:5px;"})
+				                            			 .attr({"onclick" : "replyUpdate("+reply.reply_num+")"})
+							                             .text("수정"),
+	                            $("<button>").prop({"class":"list_btn btn", "id":"modifyBtn"})
+				                            			 .attr({"onclick" : "replyDelete(" + reply.reply_num + ");"})
+							                             .text("삭제"))
+	                      );
+	                      divTags.push(div)
+	                });
+	                listBody.html(divTags);
+	             }else{
+	 				divTags.push(
+	                   $("<div>").prop({"style": "border-top:1px solid #dddddd; padding: 10px;"}).text("댓글 없음.")
+	                );
+	             }
+				listBody.html(divTags);
+				pagingArea.html(resp.pagingHTMLForBS);
+	          },
+	          error : function(errorResp) {
+	             console.log(errorResp.status + ", "
+	                   + errorResp.responseText)
+	          }
+	       }); // ajax end
+	       return false;
+	    }; // submit handler end
     
     searchForm.on('submit', abc);
     

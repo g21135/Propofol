@@ -1,24 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.alarm.dao.IAlarmDAO">
-
-	<select id="allCount" parameterType="String" resultType="long">
-		SELECT COUNT(*)
-		FROM NOTICE
-		WHERE MEM_ID = #{mem_id}				
-	</select>
-
-	<select id="selectAlarmList" parameterType="PagingVO" resultType="NoticeVO">
-		SELECT B.* 
-		FROM(
-			SELECT ROWNUM RNUM, A.*
-			FROM (
-				SELECT * FROM NOTICE
+	<select id="selectAlarmList" parameterType="String" resultType="NoticeVO">
+			SELECT * FROM NOTICE
 				WHERE MEM_ID = #{mem_id}
-			)A
-			ORDER BY NOTICE_READ
-		)B
-		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
 	</select>
 	
 	<select id="countRead" parameterType="String" resultType="Integer">

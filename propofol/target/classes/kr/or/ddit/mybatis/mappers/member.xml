@@ -123,7 +123,8 @@ AND M.LOGIN_TYPE IS NULL
       MEM_MAIL,
       MEM_IMAGE,
       GR_NUM,
-      LOGIN_TYPE
+      LOGIN_TYPE,
+      MEM_MEMBERSHIP
    )VALUES(
       #{mem_id},
       #{mem_name},
@@ -133,7 +134,8 @@ AND M.LOGIN_TYPE IS NULL
       #{mem_mail},
       #{mem_image, jdbcType=VARCHAR},
       3,
-      #{login_type,jdbcType=NUMERIC}
+      #{login_type,jdbcType=NUMERIC},
+      0
    )
 </insert>
 <!-- 회원정보수정 -->
